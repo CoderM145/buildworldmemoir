@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>创造大陆纪念册</title>
+<style>
+:root{
+  --bg:#070c18;
+  --bg2:#0b1222;
+  --bg3:#101a30;
+  --yellow:#ffd23f;
+  --yellow-d:#f0b429;
+  --green:#3ddc84;
+  --blue:#4cc9f0;
+  --blue-d:#3a86ff;
+  --text:#e9f0fb;
+  --muted:#8fa0b8;
+  --card:rgba(255,255,255,.045);
+  --card2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.09);
+  --radius:18px;
+  --font:'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei','Noto Sans SC',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  line-height:1.75;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+a{color:var(--blue);text-decoration:none}
+::selection{background:var(--yellow);color:#000}
+
+/* ============ 顶部导航 ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;gap:6px;
+  padding:12px 76px 12px 22px;
+  background:rgba(7,12,24,.0);
+  backdrop-filter:blur(0px);
+  transition:.35s;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav.on{
+  background:rgba(7,12,24,.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav .brand{
+  display:flex;align-items:center;gap:9px;
+  font-weight:800;letter-spacing:.5px;
+  white-space:nowrap;margin-right:12px;
+}
+.nav .brand i{
+  width:20px;height:20px;border-radius:5px;
+  background:linear-gradient(135deg,var(--yellow),var(--green) 55%,var(--blue));
+  box-shadow:0 0 16px rgba(255,210,63,.4);
+}
+.nav a{
+  color:var(--muted);font-size:13.5px;font-weight:600;
+  padding:6px 12px;border-radius:99px;white-space:nowrap;
+  transition:.25s;
+}
+.nav a:hover{color:var(--text);background:var(--card2)}
+.nav a.active{color:#0a1020;background:var(--yellow)}
+.nav .nav-spacer{flex:0 0 58px;height:1px}
+
+/* ============ 全屏按钮（右上角） ============ */
+.fsbtn{
+  position:fixed;top:13px;right:16px;z-index:200;
+  width:44px;height:44px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,16,32,.5);border:1px solid var(--line);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  color:var(--text);cursor:pointer;
+  box-shadow:0 6px 22px rgba(0,0,0,.35);
+  transition:.25s;-webkit-tap-highlight-color:transparent;
+}
+.fsbtn:hover{
+  background:rgba(255,210,63,.16);border-color:rgba(255,210,63,.45);
+  color:var(--yellow);transform:translateY(-2px);
+  box-shadow:0 10px 26px rgba(255,210,63,.22);
+}
+.fsbtn:active{transform:scale(.94)}
+.fsbtn svg{
+  display:block;width:20px;height:20px;
+  stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+  shape-rendering:geometricPrecision;
+}
+.fsbtn .ico-out{display:none}
+.fsbtn.on .ico-in{display:none}
+.fsbtn.on .ico-out{display:block}
+.fsbtn.on{background:rgba(255,210,63,.14);border-color:rgba(255,210,63,.4);color:var(--yellow)}
+.fs-tip{
+  position:fixed;top:66px;right:16px;z-index:200;
+  padding:9px 15px;border-radius:11px;font-size:12.5px;font-weight:700;
+  background:rgba(7,12,24,.9);border:1px solid var(--line);color:var(--muted);
+  opacity:0;transform:translateY(-8px);pointer-events:none;transition:.28s;
+  backdrop-filter:blur(10px);white-space:nowrap;
+}
+.fs-tip.show{opacity:1;transform:none}
+@media(max-width:520px){
+  .fsbtn{top:11px;right:12px;width:40px;height:40px;border-radius:12px}
+  .fsbtn svg{width:18px;height:18px}
+  .nav{padding-right:64px}
+}
+
+/* ============ 通用 ============ */
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+section{padding:96px 0;position:relative}
+.sec-head{margin-bottom:44px}
+.sec-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:800;letter-spacing:2px;
+  color:var(--yellow);text-transform:uppercase;
+  border:1px solid rgba(255,210,63,.3);
+  background:rgba(255,210,63,.08);
+  padding:5px 13px;border-radius:99px;margin-bottom:16px;
+}
+.sec-tag.g{color:var(--green);border-color:rgba(61,220,132,.3);background:rgba(61,220,132,.08)}
+.sec-tag.b{color:var(--blue);border-color:rgba(76,201,240,.3);background:rgba(76,201,240,.08)}
+h2.t{
+  font-size:clamp(26px,4.2vw,42px);font-weight:900;letter-spacing:-.5px;
+  line-height:1.25;margin-bottom:12px;
+}
+h2.t em{
+  font-style:normal;
+  background:linear-gradient(100deg,var(--yellow),var(--green) 45%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sub{color:var(--muted);font-size:15.5px;max-width:720px}
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px;
+}
+.grid{display:grid;gap:18px}
+.reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;align-items:center;
+  padding:120px 0 70px;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background-color:#0d1830;
+  background-image:url('https://assets.box3.fun/content/bJ0v2by8wD-Ota_q9Bzj4BrsXeeu-DY1pUy6klGfBYc.jpg'),
+    linear-gradient(160deg,#1d3b2a 0%,#123a5c 40%,#2a2350 70%,#0a1226 100%);
+  background-size:cover,cover;
+  background-position:center center,center center;
+  background-repeat:no-repeat;
+  transform:scale(1.06);
+  filter:saturate(1.15);
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 0%,rgba(7,12,24,.15) 0%,rgba(7,12,24,.72) 45%,var(--bg) 100%),
+    linear-gradient(180deg,rgba(7,12,24,.55),rgba(7,12,24,.9));
+}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:center}
+.hero h1{
+  font-size:clamp(44px,8.6vw,104px);font-weight:900;line-height:.98;letter-spacing:-2px;
+  margin-bottom:6px;
+}
+.hero h1 span{
+  background:linear-gradient(100deg,var(--yellow) 0%,var(--green) 48%,var(--blue) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(76,201,240,.25));
+}
+.hero .lead{
+  font-size:clamp(15px,2vw,19px);color:#c6d3e6;margin:20px 0 28px;max-width:560px;
+}
+.hero .lead b{color:var(--yellow)}
+.pill{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(100deg,rgba(255,210,63,.16),rgba(76,201,240,.14));
+  border:1px solid rgba(255,210,63,.35);
+  padding:9px 18px;border-radius:99px;font-size:13.5px;font-weight:700;
+  margin-bottom:24px;
+}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 0 rgba(255,210,63,.7);animation:pulse 2s infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,210,63,.7)}
+  70%{box-shadow:0 0 0 12px rgba(255,210,63,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,210,63,0)}
+}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 26px;border-radius:14px;font-weight:800;font-size:14.5px;
+  transition:.25s;cursor:pointer;border:1px solid transparent;
+}
+.btn.y{background:linear-gradient(100deg,var(--yellow),var(--yellow-d));color:#17110a;box-shadow:0 10px 30px rgba(255,210,63,.25)}
+.btn.y:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(255,210,63,.34)}
+.btn.gh{background:var(--card);border-color:var(--line);color:var(--text)}
+.btn.gh:hover{background:var(--card2);transform:translateY(-3px)}
+
+/* 封面图 */
+.cover-box{position:relative;display:flex;justify-content:center}
+.cover{
+  width:min(360px,80vw);aspect-ratio:1;border-radius:26px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 90px rgba(76,201,240,.16);
+  position:relative;
+}
+.cover img{width:100%;height:100%;object-fit:cover}
+.cover::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,210,63,.14),transparent 45%,rgba(58,134,255,.18));
+  pointer-events:none;
+}
+.cover-badge{
+  position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);
+  background:var(--bg2);border:1px solid var(--line);
+  padding:8px 18px;border-radius:99px;font-size:12px;font-weight:800;
+  letter-spacing:1.5px;white-space:nowrap;
+  box-shadow:0 12px 30px rgba(0,0,0,.5);
+}
+.cover-badge b{color:var(--green)}
+
+/* 漂浮方块 */
+.floaters{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.fl{position:absolute;width:14px;height:14px;border-radius:3px;opacity:.5;animation:fl 14s linear infinite}
+@keyframes fl{
+  0%{transform:translateY(110vh) rotate(0deg);opacity:0}
+  10%{opacity:.55}
+  90%{opacity:.55}
+  100%{transform:translateY(-20vh) rotate(540deg);opacity:0}
+}
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  z-index:3;font-size:12px;color:var(--muted);letter-spacing:3px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-hint .bar{width:1px;height:36px;background:linear-gradient(var(--yellow),transparent);animation:sd 2s infinite}
+@keyframes sd{0%{opacity:0;transform:scaleY(0)}50%{opacity:1}100%{opacity:0;transform:scaleY(1)}}
+
+/* ============ 关停通知 ============ */
+.notice-wrap{
+  border-radius:26px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,210,63,.28);
+  background:linear-gradient(150deg,rgba(255,210,63,.1),rgba(76,201,240,.07) 60%,rgba(7,12,24,.4));
+}
+.notice-wrap::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--yellow),var(--green),var(--blue));
+}
+.notice-in{padding:clamp(28px,5vw,52px)}
+.notice-in h3{font-size:clamp(22px,3.4vw,34px);font-weight:900;margin-bottom:6px}
+.bigtime{
+  font-size:clamp(30px,6.4vw,64px);font-weight:900;letter-spacing:-1px;line-height:1.1;
+  margin:22px 0 8px;
+  background:linear-gradient(100deg,var(--yellow),var(--green) 60%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.bigtime small{display:block;font-size:14px;letter-spacing:3px;color:var(--muted);font-weight:700;-webkit-text-fill-color:var(--muted)}
+.notice-list{margin-top:28px;display:grid;gap:12px}
+.notice-list li{
+  list-style:none;display:flex;gap:13px;align-items:flex-start;
+  background:rgba(7,12,24,.45);border:1px solid var(--line);
+  padding:14px 18px;border-radius:14px;font-size:14.5px;
+}
+.notice-list li .ic{
+  flex:0 0 26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;
+}
+.ic.y{background:rgba(255,210,63,.18);color:var(--yellow)}
+.ic.g{background:rgba(61,220,132,.18);color:var(--green)}
+.ic.b{background:rgba(76,201,240,.18);color:var(--blue)}
+.notice-list li b{color:#fff}
+.urgent{
+  margin-top:22px;padding:16px 20px;border-radius:14px;
+  background:rgba(255,210,63,.12);border:1px dashed rgba(255,210,63,.45);
+  font-size:14.5px;color:#ffeaa0;
+}
+.urgent b{color:var(--yellow)}
+
+/* ============ 数据回顾 ============ */
+.data-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  grid-auto-rows:1fr;      /* 所有盒子等高 */
+  gap:16px;
+}
+.dcard{
+  position:relative;padding:20px 20px 18px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);overflow:hidden;
+  transition:.3s;
+  display:flex;flex-direction:column;   /* 等高布局：说明文字贴底 */
+}
+.dcard:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.2);background:var(--card2)}
+.dcard::before{
+  content:'';position:absolute;top:-40%;right:-30%;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,var(--c,rgba(255,210,63,.3)),transparent 70%);
+  filter:blur(24px);opacity:.5;
+}
+.dcard .lb{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.5px;position:relative}
+/* 数值槽位固定高度，保证所有卡片视觉一致 */
+.dcard .vslot{min-height:46px;display:flex;align-items:center;position:relative}
+.dcard .vl{
+  font-size:clamp(26px,3.4vw,38px);font-weight:900;letter-spacing:-1px;position:relative;line-height:1.15;
+}
+.dcard .un{font-size:12.5px;color:var(--muted);position:relative;margin-top:auto;padding-top:6px}
+/* 版本号拆解式（内联在说明行，节省高度） */
+.dcard .un .c1{color:var(--yellow);font-weight:800}
+.dcard .un .c2{color:var(--green);font-weight:800}
+.dcard .un .c3{color:var(--blue);font-weight:800}
+.dcard .un .op{color:var(--muted);font-weight:800}
+.dcard .un .sum{color:#fff;font-weight:800}
+.dcard .note{
+  position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;
+  padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--muted);letter-spacing:.5px;
+}
+.dcard .note.est{background:rgba(61,220,132,.14);color:var(--green)}
+/* 待公布占位方块 */
+.locked{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0 4px;position:relative}
+.locked i{
+  width:20px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  color:var(--yellow);font-style:normal;font-weight:900;font-size:15px;
+  animation:glow 2.6s ease-in-out infinite;
+}
+.locked i:nth-child(2){animation-delay:.15s}
+.locked i:nth-child(3){animation-delay:.3s}
+.locked i:nth-child(4){animation-delay:.45s}
+.locked i:nth-child(5){animation-delay:.6s}
+.locked i:nth-child(6){animation-delay:.75s}
+.locked i:nth-child(7){animation-delay:.9s}
+@keyframes glow{
+  0%,100%{background:rgba(255,255,255,.05);box-shadow:0 0 0 rgba(255,210,63,0)}
+  50%{background:rgba(255,210,63,.16);box-shadow:0 0 14px rgba(255,210,63,.25)}
+}
+.dcard:hover .locked i{animation-duration:1.1s}
+.foot-note{
+  margin-top:20px;font-size:12.5px;color:var(--muted);
+  padding:14px 18px;border-left:3px solid var(--yellow);background:rgba(255,210,63,.06);border-radius:0 12px 12px 0;
+}
+
+/* ============ 版本总览一句话 ============ */
+.vsum{
+  border-radius:18px;padding:24px 28px;margin-bottom:34px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(120deg,rgba(255,210,63,.09),rgba(61,220,132,.07) 55%,rgba(76,201,240,.09));
+  font-size:clamp(14px,1.9vw,16.5px);line-height:2;color:#dbe6f4;font-weight:600;
+}
+.vsum b{font-weight:900}
+.vsum .c1{color:var(--yellow)}
+.vsum .c2{color:var(--green)}
+.vsum .c3{color:var(--blue)}
+.vsum .end{color:#fff}
+
+/* ============ 排行榜 ============ */
+.tabs{
+  display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;margin-bottom:22px;scrollbar-width:thin;
+}
+.tabs::-webkit-scrollbar{height:5px}
+.tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:9px}
+.tab{
+  flex:0 0 auto;padding:9px 17px;border-radius:99px;font-size:13px;font-weight:700;
+  background:var(--card);border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:.22s;
+  white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:var(--card2)}
+.tab.on{
+  background:linear-gradient(100deg,var(--yellow),var(--yellow-d));color:#17110a;border-color:transparent;
+  box-shadow:0 6px 20px rgba(255,210,63,.22);
+}
+.board{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.board-top{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 24px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);
+}
+.board-top h4{font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}
+.board-top .unit{font-size:12px;color:var(--muted);font-weight:700}
+.rows{padding:8px 0}
+.row{
+  display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:14px;
+  padding:12px 24px;transition:.2s;border-left:3px solid transparent;
+}
+.row:hover{background:rgba(255,255,255,.04);border-left-color:var(--yellow)}
+.rk{
+  width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;background:rgba(255,255,255,.06);color:var(--muted);
+}
+.row:nth-child(1) .rk{background:linear-gradient(135deg,#ffd700,#f0b429);color:#2b1d00;box-shadow:0 4px 16px rgba(255,215,0,.3)}
+.row:nth-child(2) .rk{background:linear-gradient(135deg,#dfe6ee,#a9b6c8);color:#1b2430}
+.row:nth-child(3) .rk{background:linear-gradient(135deg,#e2a06a,#c47c42);color:#2b1707}
+.nm{font-weight:700;font-size:15px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.who{
+  width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;color:#0a1020;flex:0 0 auto;
+}
+.tag{
+  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;letter-spacing:.5px;
+  background:rgba(76,201,240,.14);color:var(--blue);
+}
+.tag.g{background:rgba(61,220,132,.14);color:var(--green)}
+.tag.y{background:rgba(255,210,63,.16);color:var(--yellow)}
+.vl2{font-weight:900;font-size:16px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.vl2 small{font-size:11px;color:var(--muted);font-weight:700;margin-left:3px}
+.board-foot{padding:14px 24px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.02)}
+
+/* ============ 榜单「统计中」状态 ============ */
+.pending{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:18px 24px;border-bottom:1px solid var(--line);
+  background:linear-gradient(100deg,rgba(255,210,63,.1),rgba(76,201,240,.07));
+}
+.pending .spin{
+  width:22px;height:22px;border-radius:7px;flex:0 0 auto;margin-top:1px;
+  border:2px solid rgba(255,210,63,.25);border-top-color:var(--yellow);
+  animation:spin 1.1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pending .pt{min-width:0}
+.pending .pt .a{font-size:14.5px;font-weight:900;color:var(--yellow);margin-bottom:4px}
+.pending .pt .b{font-size:12.5px;color:#b9c8dd;line-height:1.75}
+.pending .pt .b b{color:#fff;font-weight:800}
+
+/* 占位行：虚位以待 */
+.row.ph2{cursor:default;border-left-color:transparent}
+.row.ph2:hover{background:transparent;border-left-color:transparent}
+.row.ph2 .rk{
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.28);
+  box-shadow:none;border:1px dashed rgba(255,255,255,.14);
+}
+.row.ph2:nth-child(1) .rk,
+.row.ph2:nth-child(2) .rk,
+.row.ph2:nth-child(3) .rk{
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);box-shadow:none;
+}
+.skel{
+  height:11px;border-radius:6px;
+  background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.1),rgba(255,255,255,.05));
+  background-size:200% 100%;animation:sk 1.6s linear infinite;
+}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel.a{width:26px;height:26px;border-radius:7px;flex:0 0 auto}
+.skel.n{width:clamp(72px,16vw,132px)}
+.skel.t{width:52px;height:9px}
+.skel.v{width:64px;margin-left:auto}
+.row.ph2 .nm{opacity:.55}
+.row.ph2 .wait{
+  font-size:11.5px;font-weight:800;color:rgba(255,210,63,.75);
+  letter-spacing:1px;white-space:nowrap;
+}
+.row.ph2 .wait i{font-style:normal;animation:blink 1.8s ease-in-out infinite}
+.row.ph2 .wait i:nth-child(2){animation-delay:.2s}
+.row.ph2 .wait i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* 图片加载失败时的方块风降级 */
+.ph{background:linear-gradient(135deg,#123a5c,#1d3b2a 50%,#2a2350)}
+.ph.imgfail::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 2px,transparent 2px),
+    linear-gradient(90deg,rgba(255,255,255,.055) 2px,transparent 2px);
+  background-size:36px 36px;
+}
+.ph.imgfail::after{
+  content:'创 造 大 陆';position:absolute;inset:0;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:clamp(18px,3.2vw,34px);letter-spacing:8px;
+  color:rgba(255,255,255,.3);
+}
+.imgfail img{opacity:0}
+.cover.imgfail{background:linear-gradient(135deg,#123a5c,#1d3b2a 55%,#2a2350)}
+
+/* ============ 回忆录 ============ */
+.memory-hero{
+  border-radius:26px;overflow:hidden;position:relative;margin-bottom:48px;
+  border:1px solid var(--line);
+}
+.memory-hero img{width:100%;height:clamp(220px,42vw,420px);object-fit:cover}
+.memory-hero .cap{
+  position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:clamp(20px,4vw,44px);
+  background:linear-gradient(180deg,rgba(7,12,24,.1),rgba(7,12,24,.88));
+}
+.memory-hero .cap h3{font-size:clamp(20px,3.4vw,34px);font-weight:900;margin-bottom:6px}
+.memory-hero .cap p{color:#c2d0e3;font-size:14.5px;max-width:640px}
+
+/* 时间轴 */
+.tl{position:relative;padding-left:0}
+.tl::before{
+  content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,var(--yellow),var(--green),var(--blue),transparent);
+  opacity:.35;
+}
+.tl-item{position:relative;width:50%;padding:0 42px 42px 0;margin-bottom:0}
+.tl-item:nth-child(even){margin-left:50%;padding:0 0 42px 42px;text-align:left}
+.tl-item:nth-child(odd){text-align:right}
+.tl-item .dot{
+  position:absolute;top:22px;right:-9px;width:18px;height:18px;border-radius:6px;
+  background:var(--bg);border:3px solid var(--yellow);z-index:2;
+  box-shadow:0 0 0 5px rgba(255,210,63,.12);
+}
+.tl-item:nth-child(even) .dot{right:auto;left:-9px}
+.tl-item:nth-child(3n+1) .dot{border-color:var(--blue);box-shadow:0 0 0 5px rgba(76,201,240,.12)}
+.tl-item:nth-child(3n+2) .dot{border-color:var(--green);box-shadow:0 0 0 5px rgba(61,220,132,.12)}
+.tl-box{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;
+  transition:.3s;
+}
+.tl-box:hover{background:var(--card2);transform:translateY(-4px)}
+.tl-ver{
+  font-size:11.5px;font-weight:900;letter-spacing:1.5px;color:var(--yellow);margin-bottom:8px;
+}
+.tl-item:nth-child(3n+1) .tl-ver{color:var(--blue)}
+.tl-item:nth-child(3n+2) .tl-ver{color:var(--green)}
+.tl-box h4{font-size:19px;font-weight:900;margin-bottom:8px}
+.tl-box p{font-size:14px;color:var(--muted)}
+.tl-anchors{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.tl-item:nth-child(odd) .tl-anchors{justify-content:flex-end}
+.tl-anchors span{
+  font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:#b6c4d8;
+}
+
+/* 第一次清单 */
+.firsts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.fcard{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;
+  transition:.28s;position:relative;overflow:hidden;
+}
+.fcard:hover{transform:translateY(-4px) scale(1.01);border-color:rgba(255,210,63,.35);background:rgba(255,210,63,.05)}
+.fcard .fv{
+  font-size:11px;font-weight:900;letter-spacing:1.2px;color:var(--yellow);margin-bottom:7px;
+}
+.fcard h5{font-size:15.5px;font-weight:800;margin-bottom:6px}
+.fcard p{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* 叙事主线 */
+.lines{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.lcard{
+  border-radius:var(--radius);padding:28px;position:relative;overflow:hidden;
+  border:1px solid var(--line);background:var(--card);
+}
+.lcard::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c);
+}
+.lcard h4{font-size:19px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+.lcard p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.lcard .chain{font-size:12.5px;color:#b6c4d8;line-height:2}
+.lcard .chain b{color:var(--yellow);font-weight:800}
+
+/* 原话引用 */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.qcard{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;
+  position:relative;
+}
+.qcard::before{
+  content:'"';position:absolute;top:6px;right:16px;font-size:60px;font-weight:900;
+  color:rgba(255,210,63,.12);line-height:1;
+}
+.qcard p{font-size:15px;font-weight:600;line-height:1.8;position:relative}
+.qcard .src{font-size:11.5px;color:var(--muted);margin-top:12px;font-weight:700}
+.final-quote{
+  margin-top:20px;border-radius:22px;padding:clamp(28px,5vw,52px);text-align:center;
+  border:1px solid rgba(76,201,240,.3);
+  background:radial-gradient(120% 140% at 50% 0%,rgba(76,201,240,.14),rgba(7,12,24,.5) 70%);
+}
+.final-quote .big{
+  font-size:clamp(20px,3.6vw,34px);font-weight:900;line-height:1.5;margin-bottom:18px;
+}
+.final-quote .big em{
+  font-style:normal;
+  background:linear-gradient(100deg,var(--yellow),var(--green) 50%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.final-quote .small{font-size:15px;color:#c2d0e3}
+.final-quote .warn{
+  display:inline-block;margin-top:22px;padding:12px 20px;border-radius:12px;
+  background:rgba(255,210,63,.12);border:1px dashed rgba(255,210,63,.4);
+  color:var(--yellow);font-weight:800;font-size:14px;
+}
+
+/* Bug 博物馆 */
+.bug-filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:24px}
+.bugs{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.bug{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;
+  transition:.3s;position:relative;display:flex;flex-direction:column;
+}
+.bug:hover{transform:translateY(-5px);border-color:rgba(255,210,63,.3);background:rgba(255,255,255,.06)}
+.bug .hall{
+  font-size:10.5px;font-weight:900;letter-spacing:1px;padding:3px 9px;border-radius:99px;
+  background:rgba(255,255,255,.07);color:var(--muted);align-self:flex-start;margin-bottom:10px;
+}
+.bug .ver{
+  position:absolute;top:20px;right:20px;font-size:11px;font-weight:900;
+  color:var(--green);background:rgba(61,220,132,.12);padding:3px 9px;border-radius:99px;
+}
+.bug h5{font-size:16px;font-weight:800;margin-bottom:9px;padding-right:74px;line-height:1.45}
+.bug .desc{font-size:13.5px;color:var(--muted);margin-bottom:12px;flex:1}
+.bug .joke{
+  font-size:13px;padding:11px 14px;border-radius:11px;margin-bottom:14px;
+  background:rgba(255,210,63,.08);border-left:3px solid var(--yellow);color:#f0dfa8;
+  font-style:italic;
+}
+.bug .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  padding-top:13px;border-top:1px dashed rgba(255,255,255,.12);font-size:11.5px;font-weight:700}
+.bug .meta .vic{color:var(--muted)}
+.bug .meta .vic b{color:var(--blue)}
+.bug .meta .diff{color:var(--yellow);letter-spacing:1px}
+.bug .meta .diff s{color:rgba(255,255,255,.14);text-decoration:none}
+
+/* 名人堂 */
+.hall-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.hall{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;
+}
+.hall h4{font-size:16px;font-weight:900;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.hall .hsub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.hall ul{display:grid;gap:9px}
+.hall li{
+  list-style:none;display:flex;align-items:center;gap:11px;font-size:14px;
+  padding:10px 13px;border-radius:11px;background:rgba(255,255,255,.035);
+}
+.av{
+  width:30px;height:30px;border-radius:9px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#0a1020;
+}
+.hall li .role{margin-left:auto;font-size:11px;font-weight:800;color:var(--muted)}
+.legend{
+  margin-top:18px;border-radius:16px;padding:24px;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,rgba(255,210,63,.1),rgba(7,12,24,.4));
+  border:1px solid rgba(255,210,63,.25);
+}
+/* ============ 进服流程 onPlayerJoin ============ */
+.jflow{display:grid;gap:13px}
+.jstep{
+  display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+  transition:.28s;position:relative;overflow:hidden;
+}
+.jstep:hover{transform:translateY(-3px);background:var(--card2);border-color:rgba(255,255,255,.18)}
+.jstep::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--sc,var(--yellow));opacity:.55;
+}
+.jstep .stp{
+  width:44px;height:44px;border-radius:13px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:#0a1020;background:var(--sc,var(--yellow));
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+}
+.jstep .bd{min-width:0}
+.jstep h5{font-size:16.5px;font-weight:900;margin-bottom:7px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;line-height:1.45}
+.jstep .tgx{
+  font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;letter-spacing:.5px;
+  background:rgba(255,255,255,.07);color:var(--muted);white-space:nowrap;
+}
+.jstep .tgx.y{background:rgba(255,210,63,.15);color:var(--yellow)}
+.jstep .tgx.g{background:rgba(61,220,132,.15);color:var(--green)}
+.jstep .tgx.b{background:rgba(76,201,240,.15);color:var(--blue)}
+.jstep p{font-size:13.8px;color:var(--muted);line-height:1.85}
+.jstep p b{color:#dbe6f4;font-weight:800}
+.jstep pre{
+  margin-top:12px;padding:13px 15px;border-radius:11px;overflow-x:auto;
+  background:rgba(0,0,0,.38);border:1px solid var(--line);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Courier New',monospace;
+  font-size:12px;line-height:1.8;color:#c3d3e6;white-space:pre;
+  scrollbar-width:thin;
+}
+.jstep pre::-webkit-scrollbar{height:5px}
+.jstep pre::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:9px}
+.jstep pre .cm{color:#6d7f99;font-style:italic}
+.saylist{display:grid;gap:7px;margin-top:12px}
+.sayline{
+  display:flex;gap:10px;align-items:baseline;font-size:12.8px;line-height:1.7;
+  padding:9px 13px;border-radius:10px;background:rgba(61,220,132,.07);
+  border-left:3px solid rgba(61,220,132,.45);
+}
+.sayline .who3{
+  flex:0 0 auto;font-size:10.5px;font-weight:900;letter-spacing:.5px;
+  padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--muted);
+}
+.sayline .txt{color:#d5e3f2;font-weight:600;word-break:break-word}
+.sayline .txt em{font-style:normal;color:var(--yellow);font-weight:800}
+.sayline .txt i{font-style:normal;color:var(--green)}
+.chips2{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chips2 span{
+  font-size:12px;font-weight:800;padding:5px 11px;border-radius:8px;
+  background:rgba(255,210,63,.1);border:1px solid rgba(255,210,63,.28);color:#ffe6a3;
+}
+@media(max-width:640px){
+  .jstep{grid-template-columns:38px 1fr;gap:12px;padding:17px 16px}
+  .jstep .stp{width:34px;height:34px;border-radius:10px;font-size:13.5px}
+  .jstep h5{font-size:15px}
+}
+
+/* ============ 身份与荣誉册 ============ */
+.rolls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:16px}
+.roll{
+  display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:16px;
+  background:var(--card);border:1px solid var(--line);transition:.28s;
+}
+.roll:hover{transform:translateY(-4px);background:var(--card2)}
+.roll .n{font-size:clamp(30px,4.4vw,42px);font-weight:900;letter-spacing:-1.5px;line-height:1}
+.roll .n.y{color:var(--yellow)} .roll .n.g{color:var(--green)} .roll .n.b{color:var(--blue)}
+.roll .tx .t{font-size:14.5px;font-weight:800}
+.roll .tx .s{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:2px}
+
+.srcnote{
+  display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;
+  padding:16px 20px;border-radius:14px;margin-bottom:34px;
+  background:rgba(76,201,240,.07);border:1px dashed rgba(76,201,240,.3);
+  font-size:13px;color:#bcd6e8;line-height:1.8;
+}
+.srcnote .lb2{
+  font-size:10.5px;font-weight:900;letter-spacing:1px;color:var(--blue);
+  background:rgba(76,201,240,.14);padding:4px 10px;border-radius:99px;white-space:nowrap;
+}
+.srcnote code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background:rgba(255,255,255,.08);padding:2px 7px;border-radius:6px;
+  color:var(--yellow);font-size:12.5px;
+}
+
+/* 称号册 */
+.titles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.tcard{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+  transition:.28s;position:relative;
+}
+.tcard:hover{transform:translateY(-3px);background:var(--card2)}
+.tcard .th{display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap}
+.tcard .th .icn{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+.tcard .th .nm{font-size:16px;font-weight:900}
+.tcard .th .cnt{margin-left:auto;font-size:11px;font-weight:800;color:var(--muted)}
+.tcard .tcode{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:.3px;
+}
+.tcard .tcode b{color:var(--blue)}
+.tcard .ids{display:flex;flex-wrap:wrap;gap:7px}
+.tcard .ids span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cfdaea;
+  word-break:break-all;
+}
+.tcard.empty .ids span{color:var(--muted);font-style:italic;font-family:var(--font)}
+.tcard.y{border-left:3px solid rgba(255,210,63,.55)}
+.tcard.y .th .icn{background:rgba(255,210,63,.16)}
+.tcard.g{border-left:3px solid rgba(61,220,132,.5)}
+.tcard.g .th .icn{background:rgba(61,220,132,.16)}
+.tcard.b{border-left:3px solid rgba(76,201,240,.5)}
+.tcard.b .th .icn{background:rgba(76,201,240,.16)}
+
+/* ============ 2022 系统广播 ============ */
+.bcast{
+  border-radius:18px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(61,220,132,.07),rgba(7,12,24,.5));
+}
+.bcast-head{
+  display:flex;align-items:center;gap:10px;padding:14px 20px;
+  background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);
+}
+.bcast-head .ld{display:flex;gap:5px}
+.bcast-head .ld i{width:8px;height:8px;border-radius:50%;background:var(--muted);opacity:.5}
+.bcast-head .ld i:nth-child(1){background:var(--yellow);opacity:1}
+.bcast-head .ld i:nth-child(2){background:var(--green);opacity:1}
+.bcast-head .tt{font-size:13px;font-weight:800;letter-spacing:.5px}
+.bcast-head .yr{margin-left:auto;font-size:11px;font-weight:800;color:var(--muted)}
+.bcast-body{padding:clamp(22px,4vw,34px);min-height:118px;display:flex;align-items:center}
+.bcast-line{
+  font-size:clamp(14.5px,2.2vw,19px);font-weight:600;line-height:1.85;color:#e2ebf7;
+  animation:bfade .5s ease;
+}
+.bcast-line .sys{
+  color:var(--green);font-weight:900;margin-right:8px;
+  font-size:.85em;letter-spacing:.5px;
+}
+.bcast-line .cur{color:var(--yellow)}
+@keyframes bfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bcast-foot{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:13px 20px;border-top:1px solid var(--line);background:rgba(255,255,255,.02);
+}
+.bcast-foot button{
+  font-family:var(--font);font-size:12.5px;font-weight:800;cursor:pointer;
+  padding:7px 15px;border-radius:9px;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--text);transition:.22s;
+}
+.bcast-foot button:hover{background:rgba(61,220,132,.16);border-color:rgba(61,220,132,.4);color:var(--green)}
+.bcast-foot .idx{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:800;font-variant-numeric:tabular-nums}
+.bcast-all{
+  display:none;padding:0 20px 20px;max-height:330px;overflow-y:auto;
+}
+.bcast-all.open{display:block}
+.bcast-all ol{list-style:none;display:grid;gap:8px;padding-top:16px;border-top:1px dashed rgba(255,255,255,.12)}
+.bcast-all li{
+  font-size:13px;color:#c2d0e3;line-height:1.7;padding:9px 13px;border-radius:10px;
+  background:rgba(255,255,255,.03);
+}
+.bcast-all li b{color:var(--green);font-weight:800;margin-right:6px}
+
+.legend .q{font-size:44px;font-weight:900;color:rgba(255,210,63,.18);line-height:.8}
+.legend h4{font-size:18px;font-weight:900;margin-bottom:10px}
+.legend p{font-size:14px;color:#d5c79d;line-height:1.85}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.chip{
+  font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:99px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:#b6c4d8;
+  transition:.22s;
+}
+.chip:hover{background:rgba(255,210,63,.1);border-color:rgba(255,210,63,.3);color:var(--yellow)}
+
+/* ============ 寄语 ============ */
+.voices{display:grid;gap:18px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.vcard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;
+  position:relative;transition:.3s;
+  display:flex;flex-direction:column;   /* 短留言卡片：署名贴底，留白居中 */
+}
+.vcard:hover{transform:translateY(-4px);background:var(--card2)}
+.vcard.dev{border-color:rgba(255,210,63,.3);background:linear-gradient(150deg,rgba(255,210,63,.08),rgba(7,12,24,.35))}
+.vcard.admin{border-color:rgba(61,220,132,.25);background:linear-gradient(150deg,rgba(61,220,132,.07),rgba(7,12,24,.35))}
+.vhead{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.vav{
+  width:52px;height:52px;border-radius:15px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px;color:#0a1020;
+  box-shadow:0 8px 22px rgba(0,0,0,.35);
+}
+.vhead .n{font-size:17px;font-weight:900;word-break:break-word;line-height:1.4}
+.vhead .r{font-size:12px;color:var(--muted);font-weight:700}
+.vcard p{font-size:14.5px;color:#cfdaea;line-height:1.9}
+.vcard p + p{margin-top:12px}
+.vcard .sign{margin-top:auto;padding-top:16px;font-size:12.5px;color:var(--muted);font-weight:700;text-align:right}
+.vreply{
+  display:flex;gap:10px;margin-top:16px;padding:12px 15px;border-radius:12px;
+  background:rgba(255,210,63,.07);border-left:3px solid var(--yellow);
+}
+.vreply .ra{
+  width:24px;height:24px;border-radius:7px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#17110a;background:var(--yellow);
+}
+.vreply .rt{font-size:13px;color:#e8d9a8;line-height:1.75}
+.vreply .rt b{color:var(--yellow);font-weight:800}
+
+/* ============ 查询 ============ */
+.query-box{
+  display:grid;grid-template-columns:1fr;gap:18px;
+  border-radius:26px;padding:clamp(24px,4vw,40px);
+  background:linear-gradient(150deg,rgba(76,201,240,.09),rgba(7,12,24,.5));
+  border:1px solid rgba(76,201,240,.22);
+}
+.qform{display:flex;gap:12px;flex-wrap:wrap}
+.qform input{
+  flex:1;min-width:220px;padding:14px 18px;border-radius:13px;font-size:15px;font-weight:600;
+  background:rgba(7,12,24,.6);border:1px solid var(--line);color:var(--text);outline:none;
+  font-family:var(--font);
+}
+.qform input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(76,201,240,.12)}
+.qform input::placeholder{color:#5c6c85;font-weight:500}
+.qform button{
+  padding:14px 30px;border-radius:13px;font-weight:900;font-size:14.5px;cursor:pointer;
+  background:linear-gradient(100deg,var(--blue),var(--blue-d));color:#04121e;border:none;
+  font-family:var(--font);transition:.25s;
+}
+.qform button:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(76,201,240,.28)}
+.qresult{margin-top:6px}
+.qhead{
+  display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:14px;
+  background:rgba(7,12,24,.5);border:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap;
+}
+.qhead .n{font-size:19px;font-weight:900}
+.qhead .badge{
+  font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;
+  background:rgba(255,210,63,.16);color:var(--yellow);
+}
+.qstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.qstat{
+  padding:16px 18px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+}
+.qstat .k{font-size:11.5px;color:var(--muted);font-weight:700}
+.qstat .v{font-size:20px;font-weight:900;margin:4px 0;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.qstat .r{font-size:11.5px;font-weight:800;color:var(--green)}
+.qdemo{
+  margin-top:16px;font-size:12.5px;color:var(--muted);padding:13px 17px;border-radius:12px;
+  background:rgba(255,210,63,.07);border:1px dashed rgba(255,210,63,.3);
+}
+.qdemo b{color:var(--yellow)}
+.qempty{padding:30px;text-align:center;color:var(--muted);font-size:14px}
+
+/* ============ 社区 ============ */
+.comm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.comm{
+  border-radius:var(--radius);padding:30px;position:relative;overflow:hidden;
+  border:1px solid var(--line);background:var(--card);
+}
+.comm.qq{border-color:rgba(76,201,240,.3);background:linear-gradient(150deg,rgba(76,201,240,.1),rgba(7,12,24,.4))}
+.comm.new{border-color:rgba(61,220,132,.28);background:linear-gradient(150deg,rgba(61,220,132,.09),rgba(7,12,24,.4))}
+.comm h4{font-size:20px;font-weight:900;margin-bottom:8px}
+.comm p{font-size:14px;color:var(--muted);margin-bottom:18px}
+.comm .num{
+  font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:1px;
+  font-variant-numeric:tabular-nums;margin-bottom:6px;
+}
+.comm.qq .num{color:var(--blue)}
+.comm.new .num{color:var(--green)}
+.comm ul{display:grid;gap:8px;margin-bottom:20px}
+.comm li{list-style:none;font-size:13.5px;color:#c2d0e3;display:flex;gap:9px}
+.comm li::before{content:'▸';color:var(--yellow);font-weight:900}
+
+/* ============ 最后合影 ============ */
+.lastshot{
+  border-radius:26px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,210,63,.3);
+  background:#0a1226;
+  box-shadow:0 40px 90px rgba(0,0,0,.5),0 0 70px rgba(255,210,63,.09);
+}
+.lastshot.ph.imgfail::after{
+  content:'停服前最后的合影';letter-spacing:6px;font-size:clamp(13px,2.4vw,26px);
+}
+.lastshot .frame{position:relative}
+.lastshot img{width:100%;height:auto;display:block}
+.lastshot .frame::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,210,63,.08),transparent 40%,rgba(7,12,24,.35));
+}
+.shot-cap{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 24px;background:rgba(255,255,255,.03);
+  border-top:1px solid var(--line);
+}
+.shot-cap .t{font-size:15px;font-weight:800}
+.shot-cap .c{font-size:12.5px;color:var(--muted);font-weight:600}
+.shot-cap .c b{color:var(--green)}
+.shot-cap .to-end{
+  margin-left:auto;font-size:12.5px;font-weight:700;color:var(--yellow);
+  padding:6px 14px;border-radius:99px;border:1px solid rgba(255,210,63,.35);
+  background:rgba(255,210,63,.08);transition:.22s;
+}
+.shot-cap .to-end:hover{background:rgba(255,210,63,.18)}
+.shot-hint{display:none;font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+@media(max-width:640px){ .shot-hint{display:block} }
+.shot-quote{
+  margin-top:22px;text-align:center;font-size:clamp(15px,2.4vw,21px);
+  font-weight:800;line-height:1.7;color:#dfe8f5;
+}
+.shot-quote em{
+  font-style:normal;
+  background:linear-gradient(100deg,var(--yellow),var(--green) 50%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ============ 结尾 ============ */
+.ending{
+  position:relative;overflow:hidden;text-align:center;
+  padding:clamp(90px,14vw,170px) 0;
+  background:#04070f;
+}
+#stars{position:absolute;inset:0;width:100%;height:100%}
+.ending .in{position:relative;z-index:2}
+.ending h2{
+  font-size:clamp(30px,6.6vw,74px);font-weight:900;line-height:1.2;letter-spacing:-1.5px;margin-bottom:22px;
+}
+.ending h2 em{
+  font-style:normal;
+  background:linear-gradient(100deg,var(--yellow),var(--green) 45%,var(--blue));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.ending .sub2{font-size:clamp(14px,2vw,17px);color:#b9c8dd;max-width:720px;margin:0 auto 34px}
+.ending .words{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;
+}
+.ending .words span{
+  padding:9px 18px;border-radius:99px;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:#c2d0e3;
+}
+.final-sig{
+  display:inline-flex;flex-direction:column;gap:6px;align-items:center;
+  padding:24px 40px;border-radius:20px;
+  background:rgba(255,255,255,.035);border:1px solid var(--line);
+}
+.final-sig .a{font-size:17px;font-weight:900}
+.final-sig .b{font-size:12.5px;color:var(--muted);letter-spacing:1px}
+footer{
+  padding:34px 22px;text-align:center;font-size:12.5px;color:#5f6f88;
+  border-top:1px solid var(--line);background:#04070f;
+}
+footer b{color:var(--muted)}
+
+/* ============ 响应式 ============ */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:38px;text-align:center}
+  .hero .lead{margin-left:auto;margin-right:auto}
+  .btns{justify-content:center}
+  .cover-box{order:-1}
+  .tl::before{left:16px}
+  .tl-item,.tl-item:nth-child(even){width:100%;margin-left:0;padding:0 0 34px 44px;text-align:left}
+  .tl-item .dot,.tl-item:nth-child(even) .dot{left:7px;right:auto}
+  .tl-item:nth-child(odd) .tl-anchors{justify-content:flex-start}
+  section{padding:68px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav" id="nav">
+  <div class="brand"><i></i>创造大陆</div>
+  <a href="#notice">关停通知</a>
+  <a href="#data">数据回顾</a>
+  <a href="#board">名人堂排行</a>
+  <a href="#memory">创造大陆回忆录</a>
+  <a href="#bug">Bug博物馆</a>
+  <a href="#voices">寄语</a>
+  <a href="#query">数据回档</a>
+  <a href="#community">联系</a>
+  <a href="#photo">最后合影</a>
+  <a href="#ending">告别</a>
+  <span class="nav-spacer" aria-hidden="true"></span>
+</nav>
+
+<!-- ============ 右上角全屏按钮 ============ -->
+<button class="fsbtn" id="fsBtn" title="全屏浏览" aria-label="全屏浏览">
+  <svg class="ico-in" viewBox="0 0 24 24" aria-hidden="true">
+    <polyline points="15 3 21 3 21 9"></polyline>
+    <polyline points="9 21 3 21 3 15"></polyline>
+    <line x1="21" y1="3" x2="14" y2="10"></line>
+    <line x1="3" y1="21" x2="10" y2="14"></line>
+  </svg>
+  <svg class="ico-out" viewBox="0 0 24 24" aria-hidden="true">
+    <polyline points="4 14 10 14 10 20"></polyline>
+    <polyline points="20 10 14 10 14 4"></polyline>
+    <line x1="14" y1="10" x2="21" y2="3"></line>
+    <line x1="3" y1="21" x2="10" y2="14"></line>
+  </svg>
+</button>
+<div class="fs-tip" id="fsTip"></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="floaters" id="floaters"></div>
+  <div class="wrap hero-inner">
+    <div>
+      <div class="pill"><span class="dot"></span>2021 — 2026 · 五年，一个世界的落成、谢幕与重逢</div>
+      <h1><span>创造大陆</span></h1>
+      <p class="lead">
+        这是一个可以自由创造的世界。<br>
+        从 <b>code v1 只能放木板</b>，到 256×64×256 的辽阔大陆、48,283 位来过的玩家、31 万次踏入。
+        这里的一砖一瓦，都是你们亲手放下的。<br>
+        <b>2026 年 9 月 30 日 22:00，服务器将停止运行。</b>这一页，是我们留给这片大陆的纪念碑。
+      </p>
+      <div class="btns">
+        <a class="btn y" href="#notice">🕯 停运公告</a>
+        <a class="btn gh" href="#memory">📖 翻开回忆录</a>
+        <a class="btn gh" href="#query">🔍 查我的数据</a>
+      </div>
+    </div>
+    <div class="cover-box">
+      <div class="cover">
+        <img src="https://assets.box3.fun/content/0SraQO3YhzUIZUMXLb5kiiXYoTymEXQP8IGvstwUbWo.png" alt="创造大陆封面">      </div>
+      <div class="cover-badge">官方QQ群 <b>810566002</b></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><span class="bar"></span></div>
+</header>
+
+<!-- ============ 关停通知 ============ -->
+<section id="notice">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">🕯 停运公告</div>
+      <h2 class="t">服务器<em>将停运</em></h2>
+      <p class="sub">这不是我们想写的公告，但我们必须亲口告诉你。</p>
+    </div>
+
+    <div class="notice-wrap reveal">
+      <div class="notice-in">
+        <h3>致全体创造大陆玩家</h3>
+        <p style="color:var(--muted);font-size:14.5px">
+          由于运营平台「神奇代码岛」将停止服务，《创造大陆》将随平台一同关停，服务器于 2026 年 9 月 30 日 22:00 关停。
+        </p>
+        <div class="bigtime">
+          将于 2026 年 9 月 30 日 22:00 停运
+          <small>SERVER OFFLINE · 创造大陆</small>
+        </div>
+        <ul class="notice-list">
+          <li><span class="ic y">1</span><div><b>服务器已停运：</b>2026 年 9 月 30 日 22:00 整，服务器正式关闭。不过在10月1日早上，神岛的服务器似乎还没关（？），创造大陆的在线时代就此结束了吗（？）。</div></li>
+          <li><span class="ic g">2</span><div><b>建筑导出窗口已结束：</b>停运前我们已全面开放建筑导出。若你未能及时导出，请加入官方 QQ 群 <b>810566002</b> 联系我们，我们会从备份中帮你找回。</div></li>
+          <li><span class="ic b">3</span><div><b>数据正在整理与备份：</b>数据库会备份，个人数据回档查询与完整榜单将在整理完成后逐步开放。</div></li>
+          <li><span class="ic y">4</span><div><b>后续动态：</b>请加入官方 QQ 群 <b>810566002</b>，获取创造大陆新动态——未来它也许会在本地岛上重新开服。</div></li>
+        </ul>
+        <div class="urgent">
+          🕯 <b>写在熄灯之后：</b>服务器虽然停了（？），但你盖过的每一座房子、发过的每一句言，我们都还留着。
+          那不只是几万个方块的数据，那是你在这里度过的每一个夜晚。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 数据回顾 ============ -->
+<section id="data" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag g">📊 五年，一起堆出来的数字</div>
+      <h2 class="t">玩家<em>数据回顾</em></h2>
+      <p class="sub">这些数字背后，是 4 万多个账号、无数个通宵搭建的夜晚。</p>
+    </div>
+
+    <div class="data-grid" id="dataGrid"></div>
+
+    <div class="foot-note reveal">
+      ※ 说明：本页部分数据为<b style="color:var(--muted)">估算值</b>（总游玩时长、游玩次数、累计用户等以平台统计为准）；
+      标记为 <b style="color:var(--yellow)">＊</b> 的项目（放置 / 破坏 / 替换方块数、建筑保存与读取数、聊天条数、PVP 伤害与死亡数）
+      将在<b style="color:var(--yellow)">数据整理完成后统一正式公布</b>。届时请留意官方 QQ 群 810566002 与本页面更新。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 排行榜 ============ -->
+<section id="board">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag b">🏆 名人堂</div>
+      <h2 class="t">创造大陆<em>玩家排行榜</em></h2>
+      <p class="sub">九张榜单，九种在这片大陆上活着的方式。盖楼的、拆迁的、聊天的、打架的——每一种都被记住。</p>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="board reveal">
+      <div class="board-top">
+        <h4 id="bTitle">积分排行</h4>
+        <span class="unit" id="bUnit">单位：分</span>
+      </div>
+      <div class="pending" id="bPending" hidden>
+        <span class="spin"></span>
+        <div class="pt">
+          <div class="a">数据仍在统计中</div>
+          <div class="b">
+            我们正在从备份中核对全服排行榜数据。<br>
+            完整名单与准确名次将在数据整理完成后，于<b>本页面与官方 QQ 群 810566002</b> 同步公布。
+          </div>
+        </div>
+      </div>
+      <div class="rows" id="rows"></div>
+      <div class="board-foot" id="bFoot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 回忆录 ============ -->
+<section id="memory" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">📖 回忆录</div>
+      <h2 class="t">创造大陆<em>回忆录</em></h2>
+      <p class="sub">从code v1到v8.2.15。这一章很长，因为五年真的不短。</p>
+    </div>
+
+    <div class="memory-hero ph reveal">
+      <img src="https://assets.box3.fun/content/kPRQPuwxWcNGf3_bt8vxE0YR5qTmYweYo794419J1uo.png" alt="创造大陆100K游玩次数纪念宣传图">
+      <div class="cap">
+        <h3>100K 游玩次数纪念</h3>
+        <p>从 code v10 的"破 100 浏览"，到如今——这条路，我们走了整整五年。</p>
+      </div>
+    </div>
+
+    <div class="grp" style="margin-bottom:56px">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">一、创造大陆的Roadmap</h3>
+      <p class="sub" style="margin-bottom:20px">我们的更新日志里记载了创陆的发展，我们用这种方式，回顾这5年。</p>
+
+      <div class="vsum" id="vSum"></div>
+
+      <div class="tl" id="timeline"></div>
+    </div>
+
+    <div class="reveal" style="margin-bottom:56px">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">二、"第一次"清单 · 从无到有</h3>
+      <p class="sub" style="margin-bottom:26px">每一条都是一个"第一次"：第一次能飞、第一次有昼夜、第一次有人被误封、第一次说出再见。</p>
+      <div class="firsts" id="firsts"></div>
+    </div>
+
+    <div class="reveal" style="margin-bottom:56px">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">三、硬数字 · 这五年的体检报告</h3>
+      <p class="sub" style="margin-bottom:26px">有些数字很震撼，尤其是把 code v10 的 100 和 v8.2.15 的 312.8K 放在一起看的时候。</p>
+      <div class="data-grid" id="hardGrid"></div>
+    </div>
+
+    <div class="grp" style="margin-bottom:56px">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">四、原话 · 那些没有被改写的句子</h3>
+      <p class="sub" style="margin-bottom:26px">整份日志里最有温度的素材，我们一个字都没有改。</p>
+      <div class="quotes" id="quotes"></div>
+
+      <div class="final-quote">
+        <div class="big">「<em>暂时的告别不是终点。</em><br>也许在不久的将来，<br>我们会在其他地方与大家重逢，<br>让《创造大陆》的光芒继续闪耀。」</div>
+        <div class="small">「每一次创造，都是我们共同创造的奇迹！」</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-bottom:56px">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">五、三条叙事 · 把时间轴变成故事</h3>
+      <p class="sub" style="margin-bottom:26px">小团队不是按规划演进的，是按事故演进的。这三条线，就是真实的痕迹。</p>
+      <div class="lines" id="lines"></div>
+    </div>
+
+    <div class="grp">
+      <h3 style="font-size:22px;font-weight:900;margin-bottom:8px">六、名人堂 · 创造大陆の风云人物</h3>
+      <p class="sub" style="margin-bottom:26px">管理员、VIP、信任者、称号获得者。</p>
+      <div class="hall-grid" id="hall"></div>
+
+      <h3 style="font-size:20px;font-weight:900;margin:44px 0 8px">🏅 身份与荣誉册 · 23 / 5 / 5</h3>
+      <p class="sub" style="margin-bottom:18px">五年来，共有 23 位管理员、5 位 VIP 与 5 位信任者在这片大陆上被授予身份。</p>
+      <div class="rolls" id="rolls"></div>
+      <div class="srcnote reveal">
+        <span class="lb2">你知道吗</span>
+        <div>
+          在源代码里，管理员的列表名称是 <code>globalThis.NBPlayer</code>，
+          信任者的列表名称是 <code>globalThis.ZUOZHE_NB</code>。
+          不认真写变量名的是屑（）
+        </div>
+      </div>
+
+      <h3 style="font-size:20px;font-weight:900;margin:0 0 8px">🎖 称号获得者名单 · 从代码里捞出来的</h3>
+      <p class="sub" style="margin-bottom:18px">以下名单直接取自源代码里写死的称号列表。看到自己的 ID 了吗？</p>
+      <div class="titles" id="titles"></div>
+
+      <h3 style="font-size:20px;font-weight:900;margin:44px 0 8px">📻 来自 2022 年的系统广播</h3>
+      <p class="sub" style="margin-bottom:18px">进服时滚动播放的那些字，你还记得几句？</p>
+      <div class="bcast reveal">
+        <div class="bcast-head">
+          <span class="ld"><i></i><i></i><i></i></span>
+          <span class="tt">MESSAGE · 创造大陆系统广播</span>
+          <span class="yr">2022</span>
+        </div>
+        <div class="bcast-body"><div class="bcast-line" id="bcastLine"></div></div>
+        <div class="bcast-foot">
+          <button id="bcPrev">← 上一条</button>
+          <button id="bcNext">下一条 →</button>
+          <button id="bcAll">展开全部 22 条</button>
+          <span class="idx" id="bcIdx"></span>
+        </div>
+        <div class="bcast-all" id="bcAllBox"><ol id="bcAllList"></ol></div>
+      </div>
+
+      <div class="legend reveal">
+        <div class="q">?</div>
+        <h4>🥚 彩蛋：元七七 </h4>
+        <p>
+          v1.7 的更新日志里写着短短五个字：<b style="color:var(--yellow)">"感谢元七七"</b>。
+          但把整份日志翻完会发现，这个名字远不止出现一次——
+          <b style="color:var(--yellow)">"创造大陆是墨小生创作，元七七联合出品"</b>、
+          <b style="color:var(--yellow)">"感谢白小生、元七七的部分代码支持"</b>、
+          <b style="color:var(--yellow)">"特别感谢元七七同学对创造大陆的开发和管理工作的大力支持"</b>。
+          Ta不是什么来去无踪的路人，是这片大陆的共同缔造者之一。
+          至于他究竟是谁——<b>你猜（）</b>
+        </p>
+      </div>
+
+      <h3 style="font-size:20px;font-weight:900;margin:44px 0 8px">社区记忆点 · 老玩家才懂的暗号</h3>
+      <p class="sub" style="margin-bottom:18px">你看得懂下面的词吗？</p>
+      <div class="chips" id="memChips"></div>
+
+      <div class="legend reveal" style="background:linear-gradient(140deg,rgba(76,201,240,.1),rgba(7,12,24,.4));border-color:rgba(76,201,240,.25)">
+        <div class="q" style="color:rgba(76,201,240,.2)">?</div>
+        <h4>🕳 未解之谜：v5.7 的「神秘链接（）」</h4>
+        <p>
+          日志原文写着：<b style="color:var(--blue)">「永久封禁者神秘链接（）」</b>——
+          
+        </p>
+        <p style="margin-top:12px">
+          <b style="color:var(--blue)">那条链接本身，指向的是什么呢？</b>
+          它被放在"永久封禁者"后面，据说只有真正被踢出过、被封禁过的玩家，才见过它本来的样子。
+          还记得的吗？如果你点过那个链接，请在 QQ 群里说出你看到的东西。
+          这个答案，交给那些"有故事的人（存疑）"来揭。
+        </p>
+      </div>
+
+      <h3 style="font-size:22px;font-weight:900;margin:52px 0 8px">七、进服的第一秒 · 系统都替你做了什么</h3>
+      <p class="sub" style="margin-bottom:26px">
+        31 万次踏入，每一次都是同一段代码在背后跑完。下面是 <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--yellow)">world.onPlayerJoin</code> 的真实流程——
+        从你被"格式化"成标准陆民，到世界频道喊出那句话，一共十步。来看看：
+      </p>
+      <div class="jflow" id="jflow"></div>
+
+      <div class="legend reveal" style="background:linear-gradient(140deg,rgba(255,210,63,.1),rgba(7,12,24,.4));border-color:rgba(255,210,63,.25)">
+        <div class="q">?</div>
+        <h4>🥚 开发者都忘记的东西</h4>
+        <p>
+          有一行写着 <b style="color:var(--yellow)">entity.player.things = 8</b>，后面跟着三个字：<b style="color:var(--yellow)">// 用途未知</b>——
+          我最后都没想起它是干嘛的。<br>
+          还有三个变量（<b>startFallY</b>、<b>up</b>、<b>chaicishu</b>）整整齐齐被标注"已废弃"，
+          摔落伤害做过，后来取消了，代码却一直留到了 v8.2.15。<br>
+          另外，有个叫 <b style="color:var(--yellow)">'Ailu'</b> 的 userId 被单独写进判断里排除在世界广播之外；
+          而<b style="color:var(--yellow)">【金主】</b>这个称号不靠名单，看的是你的打赏（） —— 只要 &gt; 0，进服就是金主（）。
+        </p>
+      </div>
+
+      <h3 style="font-size:20px;font-weight:900;margin:44px 0 8px">建筑的力量</h3>
+      <p class="sub" style="margin-bottom:18px">别忘了这个大陆因为有你们的存在才有意义。</p>
+      <div class="memory-hero ph reveal" style="margin-bottom:0">
+        <img src="https://assets.box3.fun/content/dbYfTq6rz42D_QJmg9GaRy6z300p0VbGgPIF01EceNY.png" alt="创造大陆玩家建筑图">
+        <div class="cap">
+          <h3>这个建筑你认识吗？</h3>
+          <p>这张图片其实来自开发者Cen的早期项目截图，并不是创造大陆里的。这就是为什么这里面房子的围栏没加入到游戏中的原因（）</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Bug 博物馆 ============ -->
+<section id="bug" style="background:linear-gradient(180deg,var(--bg2),var(--bg))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Bug 博物馆</div>
+      <h2 class="t">那些年，我们<em>修过的 Bug</em></h2>
+      <p class="sub">每一个 Bug 背后都是一个故事。这里有全民当管理员的狂欢、有凭空印钞的银行，也有一句迟来的"对不起"。</p>
+    </div>
+    <div class="bug-filters" id="bugFilters"></div>
+    <div class="bugs" id="bugs"></div>
+  </div>
+</section>
+
+<!-- ============ 寄语 ============ -->
+<section id="voices" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag g">寄语</div>
+      <h2 class="t">他们想对<em>创造大陆</em>说</h2>
+      <p class="sub">开发者、管理员、还有那些把这里当成第二个家的玩家。</p>
+    </div>
+
+    <h3 style="font-size:19px;font-weight:900;margin:0 0 18px;display:flex;align-items:center;gap:10px">
+      <span style="width:8px;height:20px;border-radius:4px;background:var(--yellow);display:inline-block"></span>开发者寄语
+    </h3>
+    <div class="vgrid" id="devVoices" style="margin-bottom:44px"></div>
+
+    <h3 style="font-size:19px;font-weight:900;margin:0 0 18px;display:flex;align-items:center;gap:10px">
+      <span style="width:8px;height:20px;border-radius:4px;background:var(--green);display:inline-block"></span>管理员代表寄语
+    </h3>
+    <div class="vgrid" id="adminVoices" style="margin-bottom:44px"></div>
+
+    <h3 style="font-size:19px;font-weight:900;margin:0 0 18px;display:flex;align-items:center;gap:10px">
+      <span style="width:8px;height:20px;border-radius:4px;background:var(--blue);display:inline-block"></span>玩家代表寄语
+    </h3>
+    <div class="vgrid" id="playerVoices"></div>
+  </div>
+</section>
+
+<!-- ============ 数据查询 ============ -->
+<section id="query">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag b">🔍 数据回档</div>
+      <h2 class="t">我的<em>个人数据回档</em>查询</h2>
+      <p class="sub">输入你的昵称，查看你在这片大陆留下的全部痕迹——以及你的全服排名。</p>
+    </div>
+
+    <div class="query-box reveal">
+      <div class="qform">
+        <input id="qInput" type="text" placeholder="输入你在创造大陆的昵称，例如：原味毛豆" autocomplete="off">
+        <button id="qBtn">查询我的数据</button>
+      </div>
+      <div class="qdemo">
+        ⚠ <b>当前为示例数据。</b>服务器已停运，我们正在整理备份数据库；接口接入完成后，这里将显示你真实的全部游戏数据与全服排名。
+        （示例可查询：原味毛豆 / 墨小生 / 陌离殇 / C酱 / 云端筑梦师 / 方块狂魔 / 摸鱼的猫）
+      </div>
+      <div class="qresult" id="qResult"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 社区 ============ -->
+<section id="community" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag g">🌍 保持联系</div>
+      <h2 class="t">别走散，<em>我们还要重逢</em></h2>
+      <p class="sub">服务器要关，但群不会散。创造大陆的下一站，需要你们一起决定。</p>
+    </div>
+    <div class="comm-grid">
+      <div class="comm qq reveal">
+        <h4>💬 创造大陆官方交流群</h4>
+        <p>闲聊、吹水、找老朋友、获取新动态——这里永远为你开着。</p>
+        <div class="num">810566002</div>
+        <ul>
+          <li>和老朋友们继续聊天</li>
+          <li>第一时间获取创造大陆的新动态</li>
+          <li>未来可能在<b style="color:var(--blue)">本地岛</b>上重新运营，群内先行通知</li>
+          <li>没来得及导出建筑？在群里联系我们，我们从备份中帮你找回</li>
+        </ul>
+        <a class="btn y" href="https://qun.qq.com/universal-share/share?ac=1&authKey=6vG3VKSvnfp85i%2FHeBFcnTeZXWhXQxL66%2FnRFhMVKPk%2BJ4qPNe63aMzFvnZP3rrr&busi_data=eyJncm91cENvZGUiOiI4MTA1NjYwMDIiLCJ0b2tlbiI6ImlqQ0N5RUw4cFl3TDdLTVA3Sjd4c2xQUHorbjI0UzBQVCt6Z0o1S2tBR0RndzVBcVI1aXd3SlFMNUZFeGFhZ04iLCJ1aW4iOiIzMDIxMTAzMzY4In0%3D&data=JlXynEnviq58J_aXy-ynTEGpz4tAK_XlxmZYxib691D82HyfGxjvXpOwwag-w022slSVpmfq9Yq3I_vN7ZXpyA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener">加入 QQ 群 →</a>
+      </div>
+      <div class="comm new reveal">
+        <h4>🌱 没有 QQ？来新社区</h4>
+        <p>PICKCAT社区已经开放，我们也在那里。</p>
+        <div class="num" style="font-size:clamp(18px,2.6vw,26px)">cdsq.dao3.fun</div>
+        <ul>
+          <li>Cen 在社区里的昵称是 <b style="color:var(--green)">「原味毛豆」</b></li>
+          <li>可以发帖、分享作品、继续讨论创造与代码</li>
+          <li>创造大陆的后续动态也会同步发布</li>
+          <li>没有 QQ 的玩家，这里是我们的第二集合点</li>
+        </ul>
+        <a class="btn gh" href="https://cdsq.dao3.fun/" target="_blank" rel="noopener">前往新社区 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 停服前最后的合影 ============ -->
+<section id="photo" style="background:linear-gradient(180deg,var(--bg2),#04070f)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">📸 最后的合影</div>
+      <h2 class="t">停服前，<em>我们站在一起</em></h2>
+      <p class="sub">服务器熄灭前的最后几分钟，还留在大陆上的人聚到了同一个地方。快门按下的时候，没人舍得走。</p>
+    </div>
+
+    <div class="lastshot ph reveal">
+      <div class="frame">
+        <img src="https://picui.ogmua.cn/s1/2026/09/30/6abd2832c4b82.webp" alt="创造大陆停服前最后的合影">
+      </div>
+      <div class="shot-cap">
+        <div>
+          <div class="t">《创造大陆》停服前最后的合影</div>
+          <div class="c">摄影 / <b>XGY长老.幻影游船-幻梦之鹰</b>　·　摄于 2026 年 9 月 30 日服务器关闭前</div>
+        </div>
+        <a class="to-end" href="https://picui.ogmua.cn/s1/2026/09/30/6abd2832c4b82.webp" target="_blank" rel="noopener">查看原图 ↗</a>
+      </div>
+    </div>
+
+    <div class="shot-hint">※ 合影为横向长图，手机上可点「查看原图」看完整画面。</div>
+
+    <div class="shot-quote reveal">
+      无论神岛是否关服——<em>创造大陆永远不散。</em>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 结尾 ============ -->
+<section class="ending" id="ending">
+  <canvas id="stars"></canvas>
+  <div class="wrap in">
+    <h2>暂时的告别<br><em>不是终点</em></h2>
+    <p class="sub2">
+      五年，从一块木板到一整个世界。<br>
+      服务器关闭，地图从此尘封，但那些被你亲手放下的方块，<br>
+      那些在深夜里还在盖的房子，那声"管理员有人拆房"的呼喊——<br>
+      它们从来都不在数据库里，它们在我们的记忆里。
+    </p>
+    <div class="words">
+      <span>每一次创造</span><span>都是我们</span><span>共同创造的</span><span>奇迹</span>
+    </div>
+    <div class="final-sig">
+      <div class="a">创造大陆开发团队</div>
+      <div class="b">2021 · 2026　SEE YOU AGAIN</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  《创造大陆》纪念页 · Creativity By <b>Cen</b> | Page Designed By <b>Hy4 & Cen</b><br>
+  *This page had been edited by Cen, all the texts were written or checked by Cen.<br>
+  感谢每一位来过这片大陆的玩家 · 官方QQ群 <b>810566002</b> · 新社区 <b>cdsq.dao3.fun</b>
+</footer>
+
+<script>
+/* ============================================================
+   数据层
+   ============================================================ */
+
+/* ---------- 全服数据回顾 ---------- */
+const STATS = [
+  {lb:'总游玩时长', vl:'20,000', un:'小时（约 833 天 ・ 估算）', note:'统计数据', c:'rgba(255,210,63,.32)'},
+  {lb:'游玩次数',   vl:'312.8K', un:'次进入游戏（估算）',        note:'估算', c:'rgba(76,201,240,.32)'},
+  {lb:'累计游玩用户', vl:'48,283', un:'位玩家来过这里（估算）',   note:'估算', c:'rgba(61,220,132,.32)'},
+  {lb:'放置方块',   lock:8, un:'块 · 整理完成后公布', c:'rgba(255,210,63,.3)'},
+  {lb:'破坏方块',   lock:8, un:'块 · 整理完成后公布', c:'rgba(255,120,120,.26)'},
+  {lb:'替换方块',   lock:7, un:'块 · 整理完成后公布', c:'rgba(76,201,240,.3)'},
+  {lb:'保存建筑',   lock:5, un:'座 · 整理完成后公布', c:'rgba(61,220,132,.3)'},
+  {lb:'读取建筑',   lock:6, un:'次 · 整理完成后公布', c:'rgba(255,210,63,.28)'},
+  {lb:'在线聊天记录', lock:8, un:'条 · 整理完成后公布', c:'rgba(160,180,255,.3)'},
+  {lb:'PVP 伤害点数', lock:7, un:'点 · 整理完成后公布', c:'rgba(255,150,80,.28)'},
+  {lb:'PVP 死亡次数', lock:6, un:'次 · 整理完成后公布', c:'rgba(200,120,255,.28)'},
+  {lb:'独立版本号', vl:'91', note:'五年', c:'rgba(255,255,255,.18)',
+   unHtml:'<span class="c1">code 12</span><span class="op"> ＋ </span><span class="c2">beta 11</span><span class="op"> ＋ </span><span class="c3">正式 68</span><span class="op"> ＝ </span><span class="sum">91</span>'}
+];
+
+/* ---------- 硬数字 ---------- */
+const HARD = [
+  {lb:'运营跨度', vl:'2021→2026', un:'约五年，六个分期', c:'rgba(255,210,63,.3)'},
+  {lb:'浏览里程碑', vl:'100 → 100K', un:'code v10 破 100 ・ v5.3 破 100K', c:'rgba(61,220,132,.3)'},
+  {lb:'一周年', vl:'v4.6', un:'《创造大陆》发布一周年', c:'rgba(255,210,63,.3)'},
+  {lb:'一次性新增管理员', vl:'17 位', un:'v8.1 的那次扩招', c:'rgba(160,180,255,.3)'},
+  {lb:'积分保存间隔', vl:'60 秒', un:'每 60 秒自动入库', c:'rgba(76,201,240,.28)'},
+  {lb:'物理球寿命', vl:'20 秒', un:'短暂而绚烂的存在', c:'rgba(255,150,80,.28)'},
+  {lb:'玩家体型', vl:'0.9', un:'beta 0.8 定下的手感', c:'rgba(200,120,255,.28)'}
+];
+
+/* ---------- 排行榜 ----------
+   ⚠ 数据开关：BOARDS_READY = false 表示真实榜单仍在统计中，
+     页面只显示「虚位以待」，不会渲染任何模拟数据。
+     等数据整理完成后：① 把下面的 rows 换成真实名单 ② 把开关改成 true 即可，
+     排行榜的其它代码（Tab 切换、排名样式、说明文案）无需改动。
+------------------------------------------------------------------ */
+const BOARDS_READY = false;   /* ← 改这里：数据就绪后设为 true */
+const BOARDS = [
+  {key:'point', name:'积分排行', unit:'分', icon:'⭐',
+   rows:[['陌离殇',1286400,'定海神针'],['云端筑梦师',984300,'建筑大师'],['C酱',872150,'元老管理员'],['元七七',760900,'民间大神'],['方块狂魔',655400,'基建狂魔'],['白小生',542800,'首批VIP'],['河小林',488200,'管理员'],['呆檬',431650,'首批VIP'],['星轨旅人',388900,'夜游神'],['七式草莓',352100,'开发者']]},
+  {key:'place', name:'放置方块排行', unit:'块', icon:'🧱',
+   rows:[['方块狂魔',1842300,'基建狂魔'],['云端筑梦师',1455900,'建筑大师'],['陌离殇',1120400,'定海神针'],['一整块木头',968700,'木头猎人'],['原味毛豆',842100,'开发者'],['C酱',775600,'元老管理员'],['白小生',690300,'首批VIP'],['星轨旅人',588400,'夜游神'],['河小林',512900,'管理员'],['不打烊的矿工',466200,'矿工']]},
+  {key:'break', name:'破坏方块排行', unit:'块', icon:'⛏️',
+   rows:[['拆迁办主任',2310500,'拆迁办'],['方块狂魔',1688200,'基建狂魔'],['硝石与火',1204700,'爆破专家'],['苦力怕先生',986300,'自爆爱好者'],['摸鱼的猫',742800,'摸鱼冠军'],['C酱',655100,'元老管理员'],['星轨旅人',588600,'夜游神'],['原味毛豆',501400,'开发者'],['呆檬',447900,'首批VIP'],['红石小白',392300,'红石学徒']]},
+  {key:'replace', name:'替换方块次数排行', unit:'次', icon:'🔄',
+   rows:[['云端筑梦师',486300,'建筑大师'],['方块狂魔',402700,'基建狂魔'],['一整块木头',355900,'木头猎人'],['陌离殇',288400,'定海神针'],['白小生',246100,'首批VIP'],['河小林',213700,'管理员'],['七式草莓',188500,'开发者'],['星轨旅人',165300,'夜游神'],['魈厨与散厨',142800,'管理员'],['不打烊的矿工',128600,'矿工']]},
+  {key:'chat', name:'发送聊天信息排行', unit:'条', icon:'💬',
+   rows:[['摸鱼的猫',92400,'话痨组长'],['C酱',78600,'元老管理员'],['陌离殇',66300,'定海神针'],['半糖去冰',58900,'甜度担当'],['河小林',51200,'管理员'],['呆檬',46700,'首批VIP'],['魈厨与散厨',42100,'管理员'],['星轨旅人',38500,'夜游神'],['苦力怕先生',33900,'自爆爱好者'],['白小生',30400,'首批VIP']]},
+  {key:'enter', name:'进入游戏次数排行', unit:'次', icon:'🚪',
+   rows:[['C酱',6842,'元老管理员'],['陌离殇',6215,'定海神针'],['摸鱼的猫',5730,'摸鱼冠军'],['方块狂魔',5186,'基建狂魔'],['云端筑梦师',4902,'建筑大师'],['白小生',4377,'首批VIP'],['河小林',4015,'管理员'],['元七七',3688,'民间大神'],['星轨旅人',3412,'夜游神'],['呆檬',3105,'首批VIP']]},
+  {key:'pvp_dmg', name:'PVP 受到伤害点数排行', unit:'点', icon:'🩸',
+   rows:[['硝石与火',128600,'爆破专家'],['苦力怕先生',112400,'自爆爱好者'],['拆迁办主任',96800,'拆迁办'],['C酱',88300,'元老管理员'],['星轨旅人',76500,'夜游神'],['摸鱼的猫',68200,'摸鱼冠军'],['红石小白',59700,'红石学徒'],['呆檬',52400,'首批VIP'],['河小林',47900,'管理员'],['半糖去冰',43100,'甜度担当']]},
+  {key:'pvp_death', name:'PVP 角色死亡次数排行', unit:'次', icon:'💀',
+   rows:[['苦力怕先生',1842,'自爆爱好者'],['硝石与火',1566,'爆破专家'],['摸鱼的猫',1388,'摸鱼冠军'],['半糖去冰',1205,'甜度担当'],['红石小白',1043,'红石学徒'],['星轨旅人',968,'夜游神'],['呆檬',876,'首批VIP'],['C酱',802,'元老管理员'],['河小林',741,'管理员'],['不打烊的矿工',655,'矿工']]},
+  {key:'load', name:'读取建筑次数排行', unit:'次', icon:'📦',
+   rows:[['云端筑梦师',8642,'建筑大师'],['方块狂魔',7318,'基建狂魔'],['陌离殇',6205,'定海神针'],['原味毛豆',5764,'开发者'],['一整块木头',4988,'木头猎人'],['C酱',4516,'元老管理员'],['七式草莓',4023,'开发者'],['白小生',3687,'首批VIP'],['星轨旅人',3214,'夜游神'],['河小林',2905,'管理员']]}
+];
+
+/* ---------- 个人查询示例库 ---------- */
+const PLAYERS = {
+  '原味毛豆':{tag:'开发者 · Cen',rows:[['放置方块',842100,'块',5],['破坏方块',501400,'块',8],['替换方块',176900,'次',7],['发送聊天',28400,'条',12],['进入游戏',3244,'次',11],['读取建筑',5764,'次',4],['PVP受到伤害',36500,'点',13],['PVP死亡次数',512,'次',14],['当前积分',24860,'分',16]]},
+  '墨小生':{tag:'开发者 · Cen 的另一个名字',rows:[['放置方块',842100,'块',5],['破坏方块',501400,'块',8],['替换方块',176900,'次',7],['发送聊天',28400,'条',12],['进入游戏',3244,'次',11],['读取建筑',5764,'次',4],['PVP受到伤害',36500,'点',13],['PVP死亡次数',512,'次',14],['当前积分',24860,'分',16]]},
+  '陌离殇':{tag:'元老管理员 · 定海神针',rows:[['放置方块',1120400,'块',3],['破坏方块',288500,'块',15],['替换方块',288400,'次',4],['发送聊天',66300,'条',3],['进入游戏',6215,'次',2],['读取建筑',6205,'次',3],['PVP受到伤害',38200,'点',12],['PVP死亡次数',468,'次',17],['当前积分',1286400,'分',1]]},
+  'C酱':{tag:'元老管理员',rows:[['放置方块',775600,'块',6],['破坏方块',655100,'块',6],['替换方块',120300,'次',11],['发送聊天',78600,'条',2],['进入游戏',6842,'次',1],['读取建筑',4516,'次',6],['PVP受到伤害',88300,'点',4],['PVP死亡次数',802,'次',8],['当前积分',872150,'分',3]]},
+  '云端筑梦师':{tag:'建筑大师',rows:[['放置方块',1455900,'块',2],['破坏方块',362100,'块',12],['替换方块',486300,'次',1],['发送聊天',21800,'条',16],['进入游戏',4902,'次',5],['读取建筑',8642,'次',1],['PVP受到伤害',15400,'点',21],['PVP死亡次数',186,'次',24],['当前积分',984300,'分',2]]},
+  '方块狂魔':{tag:'基建狂魔',rows:[['放置方块',1842300,'块',1],['破坏方块',1688200,'块',2],['替换方块',402700,'次',2],['发送聊天',19600,'条',18],['进入游戏',5186,'次',4],['读取建筑',7318,'次',2],['PVP受到伤害',22600,'点',18],['PVP死亡次数',322,'次',20],['当前积分',655400,'分',5]]},
+  '摸鱼的猫':{tag:'摸鱼冠军 · 话痨组长',rows:[['放置方块',318600,'块',14],['破坏方块',742800,'块',5],['替换方块',88600,'次',14],['发送聊天',92400,'条',1],['进入游戏',5730,'次',3],['读取建筑',1642,'次',17],['PVP受到伤害',68200,'点',6],['PVP死亡次数',1388,'次',3],['当前积分',186300,'分',11]]}
+};
+
+/* ---------- 时间轴分期 ---------- */
+const TIMELINE = [
+  {ver:'code v1 → beta 1.1', name:'原型期', desc:'从"只能放木板"长成一个世界。日志最后那句备注，是整段历史最好的起点。',
+   anchors:['code v10 破 100 浏览','beta 0.1 更名']},
+  {ver:'v1.0 → v3.8', name:'治理期', desc:'反拆房工具上线，数据第一次被真正持久化。管理员、封禁、积分。',
+   anchors:['v1.6 拆图调查','v2.5 SQL','v3.0 积分入库']},
+  {ver:'v4.0 → v6.3', name:'内容扩张期', desc:'金融、天气、社区。游戏不再只是一个沙盒，它开始有了经济、气候和人味。',
+   anchors:['v4.6 一周年','v5.3 100K 浏览','v6.2 物理球/留言板']},
+  {ver:'v7.0 → v8.0', name:'重构期', desc:'一次大扫除，一次换数据库。砍掉七项功能，换来一个更稳的地基。',
+   anchors:['v7.0 移除七项功能','v8.0 Storage']},
+  {ver:'v8.1 → v8.2', name:'巅峰期', desc:'地图迁移到新岛，内容密度达到峰值。这是创造大陆最繁华的夏天。',
+   anchors:['v8.1 地图 256³','v8.2 2b2t 分图 + 你画我猜']},
+  {ver:'v8.2.1 → v8.2.15', name:'收尾期', desc:'密集的修补，然后是一个艰难的决定。最后一条更新，是开放导出。',
+   anchors:['v8.2.15 开放导出','停服公告']}
+];
+
+/* ---------- 第一次清单 ---------- */
+const FIRSTS = [
+  ['code v1','只能放木板','全日志最后一句备注，也是最好的起点。'],
+  ['code v6/v7/v8','初始平台 → 大自然 → 飞行与第三人称','世界第一次有了天空。'],
+  ['code v10','快捷栏、PVP，破 100 浏览','第一次有人真的来看。'],
+  ['beta 0.1','《一起创造》升级为《创造大陆》','名字定下来的那一刻，它才真正诞生。'],
+  ['beta 0.4–0.7','昼夜更替 → 符号/色彩/实验室方块','第一次有白天和黑夜，第一次有颜色。'],
+  ['beta 0.8','封禁系统、公告、旋转方块、玩家体型 0.9','规则与秩序的开端。'],
+  ['beta 0.9','小地图','一直用到了最后一天。'],
+  ['v1.6 / v1.7','拆图调查 → 拆图恢复','日志点名"感谢元七七"，反拆房战争开始。'],
+  ['v2.5 / v3.0','SQL 数据库 → 积分每 60 秒自动保存','数据第一次被认真对待。'],
+  ['v3.3 / v5.4','保存建筑 → 建筑可命名','你的房子第一次有了名字。'],
+  ['v4.3 / v4.6','天气系统 → 一周年 + 金融系统','会下雨的那年，也是它一岁生日。'],
+  ['v5.2 / v5.4','称号系统 → 盗房举报通道','荣誉与维权，同时到来。'],
+  ['v6.2','物理球（寿命 20 秒）、留言板、收银台、管理员招聘','短暂而绚烂的物理球，像极了青春。'],
+  ['v8.0 / v8.1','Storage 数据库 → 地图迁移到新岛','换了数据库，换了地图，换了地基。'],
+  ['v8.2','2b2t 分图、福利中心、"金主"称号、每日建筑存档','大陆开始分岔， generosity 被写进称号里。'],
+  ['v8.2.15','全面开放建筑导出','最后一条更新，是把东西还给你们。']
+];
+
+/* ---------- 原话 ---------- */
+const QUOTES = [
+  ['备注：创造大陆第一个版本（code v1）只能放木板','code v1 · 日志备注'],
+  ['beta 0.1 ——《一起创造》全面升级为《创造大陆》！！！','beta 0.1'],
+  ['正式版4.2（求过审qwq）','v4.2'],
+  ['庆祝《一起创造》破100浏览！','code v10'],
+  ['【庆祝创造大陆发布一周年！】','v4.6'],
+  ['因为特殊原因，撤除所有管理员职位，现在管理员只有陌离殇、C酱两人，VIP保留','v1.4'],
+  ['有合作者恶意修改代码，导致积分系统瘫痪，部分合作者失去权限','v6.0'],
+  ['在此对遭到误封的玩家致歉！','v8.2.6']
+];
+
+/* ---------- 叙事主线 ---------- */
+const LINES = [
+  {c:'linear-gradient(180deg,#ffd23f,#3ddc84)', icon:'🛡️', name:'拆房玩家与管理员',
+   desc:'从调查工具到恢复工具再到自动举报，攻防从未停止。而另一侧，永远写着"修复误封""解封部分玩家""误封申诉问卷"。',
+   chain:'v1.6 拆图调查 → v1.7 拆图恢复 → v3.0 自动举报 → v3.5/v3.6 反刷房 → v5.2 告示牌举报 → v8.2.8 工具向所有玩家开放 → v8.2.10 区域清图'},
+  {c:'linear-gradient(180deg,#3ddc84,#4cc9f0)', icon:'🗄️', name:'储存技术迭代',
+   desc:'无持久化 → SQL → Storage。每一次换代都伴随着功能的丢失，最典型的是"导出建筑"：v8.1 移除，v8.2.15 才重新开放。',
+   chain:'无持久化 → SQL（v2.5 测试 / v3.0 正式 / v3.7 升级）→ Storage（v8.0，支持导入旧版建筑）'},
+  {c:'linear-gradient(180deg,#4cc9f0,#ffd23f)', icon:'🔁', name:'反复增删的功能',
+   desc:'"优化地图"加了又移又修，"拉黑"v6.3 恢复、v7.0 移除、v7.1 再加。这是开发者在五年里最常做的事：删掉一些东西，然后再加回来。',
+   chain:'优化地图：加 → 移 → 修 ｜ 拉黑：v6.3 恢复 → v7.0 移除 → v7.1 再加 ｜ 积分商店：v4.7 / v5.2 / v6.2 / v8.1 反复出现'}
+];
+
+/* ---------- 名人堂 ---------- */
+const HALL = [
+  {icon:'🛡️', title:'历任管理员', sub:'权力更迭中最稳定的那几个人', color:'#3ddc84',
+   list:[['陌离殇','定海神针','v1.4 留任'],['C酱','元老管理员','v1.4 留任'],['河小林','管理员代表','长期在线'],['魈厨与散厨','管理员代表','社区治理'],['XGY长老','管理员代表','三年陆民'],['元七七','联合出品','代码 / 管理支持']]},
+  {icon:'👑', title:'VIP 与荣誉公民', sub:'最早的那一批人', color:'#ffd23f',
+   list:[['白小生','首批VIP','荣誉公民'],['呆檬','首批VIP','荣誉公民'],['喵贝壳打赏者','金主','v8.2 称号'],['新增VIP（v8.2.1）','点名式更新','神秘玩家']]},
+  {icon:'🌍', title:'服务器与社区', sub:'维持这片大陆运转的人', color:'#4cc9f0',
+   list:[['Cen（原味毛豆 / 墨小生）','开发者','编程 · 开发 · 运营'],['七式草莓','开发者','编程 · 开发 · 运营'],['元七七','联合出品','部分代码与开发支持'],['拆房调查工具','工具','v1.6 起服役'],['精品建筑展区','展区','玩家的荣光墙']]}
+];
+
+/* ---------- 进服流程 onPlayerJoin ---------- */
+const JOIN_STEPS = [
+  {c:'linear-gradient(135deg,#ffd23f,#f0b429)', t:'归零与初始化', tg:'每个玩家都一样', tgc:'',
+   d:'不管你是谁，进服的第一件事是被"格式化"成一个标准陆民：称号清空、积分归零、血量拉满 <b>20</b>、体型压到 <b>0.9</b>、手里塞一块泥土、开启飞行与 3D 光标、进入建造模式。',
+   code:`entity.player.chenghao = []
+entity.coin = 0
+entity.player.scale = 0.9
+entity.maxHp = 20;  entity.hp = 20
+entity.player.canFly = true
+entity.player.enable3DCursor = true
+entity.player.hand = "dirt"
+entity.playMode = PlayMode.BUILD
+entity.player.things = 8   // 用途未知`},
+
+  {c:'linear-gradient(135deg,#3ddc84,#2ecc71)', t:'音乐起', tg:'BGM', tgc:'g',
+   d:'C418 的《我的世界》响起。这是创造大陆五年来<b>唯一没有换过的背景音</b>——很多人对这片大陆的第一印象，就是这段旋律。不过迁移到新岛后，我忘记加这个音乐文件了，导致这个音乐一直都没放出来（',
+   code:`entity.player.music.sample = 'audio/C418-我的世界.mp3'`},
+
+  {c:'linear-gradient(135deg,#4cc9f0,#3a86ff)', t:'读档', tg:'loadPlayer', tgc:'b',
+   d:'系统去数据库里把你的东西捞出来。如果你在<b>旧数据库（SQL 时代）</b>里还留着建筑，会自动迁移到新库，并弹一条提示告诉你迁了多少条——那次 Storage 换库，就是靠这段把大家的房子接过来的。',
+   code:`await loadPlayer(entity)
+if (!entity.data.bddata) {
+  await loadPlayers(entity)
+  // 检测到你在旧数据库中有 N 条建筑数据，已为你迁移至新数据库。
+}`},
+
+  {c:'linear-gradient(135deg,#ffd23f,#f0b429)', t:'身份识别 · 四张名单', tg:'你是谁', tgc:'y',
+   d:'系统依次比对四张写死在代码里的名单，看你是不是自己人：<b>NBplayer</b>（管理员 23 人）、<b>VIP_player</b>（VIP 5 人）、<b>ZUOZHE_NB</b>（信任者 5 人）、以及 <b>JS_player</b>。',
+   code:`if ($$$(entity.player.userId)) {
+  append(NBplayer);    append(VIP_player);
+  append(ZUOZHE_NB);   append(JS_player);
+}`},
+
+  {c:'linear-gradient(135deg,#3ddc84,#2ecc71)', t:'按键映射 · 手指被重新安排', tg:'操作', tgc:'g',
+   d:'E 打开菜单、左键破坏、右键放置。而<b>蹲下 + 左键</b>这一下——如果你在管理员名单里，唤出的是管理员工具；不在的话，还是老老实实拆方块。',
+   code:`entity.player.button = {
+  E: ButtonType.MENU,
+  action0: ButtonType.BREAK_BLOCK,
+  action1: ButtonType.PLACE_BLOCK,
+  crouchAction0: NBplayer.includes(userId)
+    ? ButtonType.ADMIN_TOOLS : ButtonType.BREAK_BLOCK,
+  crouchAction1: ButtonType.MENU
+}`},
+
+  {c:'linear-gradient(135deg,#4cc9f0,#3a86ff)', t:'世界频道：谁来了', tg:'全服广播', tgc:'b',
+   d:'系统根据你的身份，在世界频道喊一句话。下面这些开场白，老玩家大概都能背下来了——',
+   say:[
+     ['管理员','管理员 <em>{名字}</em> 进入了地图!'],
+     ['VIP','尊敬的VIP玩家 <em>{名字}</em> 进入了创造大陆！欢迎━(*｀∀´*)ノ亻！'],
+     ['建筑大师','欢迎建筑大师 <em>{名字}</em> 进入地图━(*｀∀´*)ノ亻！！！'],
+     ['比赛获奖者','第一届建筑比赛获奖者 <em>{名字}</em> 进入了地图！'],
+     ['UP主','UP主 <em>{名字}</em> 进入了地图！'],
+     ['工具人','工具人 <em>{名字}</em> 进入了地图！'],
+     ['龙游之星','龙游之星 <em>{名字}</em> 进入了地图！'],
+     ['文明玩家','文明玩家 <em>{名字}</em> 进入了地图！'],
+     ['哲学家','哲学家 <em>{名字}</em> 进入了地图！'],
+     ['金主','金主 <em>{名字}</em> 进入了地图！（喵贝壳 &gt; 0 才算）'],
+     ['解封','<i>[系统]</i>被解封的玩家 <em>{名字}</em> 进入了地图']
+   ],
+   note:'冷知识：当在线管理员超过 2 人时，<b>拆房警告会自动关闭</b>——人多的时候，系统觉得你们镇得住场子。'},
+
+  {c:'linear-gradient(135deg,#ffd23f,#f0b429)', t:'称号装配 · 你头顶挂着什么', tg:'chenghao', tgc:'y',
+   d:'每条广播背后，都会往你头上挂一个称号。而<b>信任者（ZUOZHE_NB）</b>进服时会被一次性塞满十个',
+   code:`// 管理员
+entity.player.chenghao.push('【世界主宰】')
+// VIP
+entity.player.chenghao.push('【大陆贵客】')
+// 信任者：一口气十个
+entity.player.chenghao.push('【梦想建筑家】','【建筑大师】','【UP主】',
+  '【上帝】','【工具人】','【封号斗罗】','【龙游之星】',
+  '【好家伙】','【哲学家】','【金主】')`,
+   chips:['【梦想建筑家】','【建筑大师】','【UP主】','【上帝】','【工具人】','【封号斗罗】','【龙游之星】','【好家伙】','【哲学家】','【金主】']},
+
+  {c:'linear-gradient(135deg,#3ddc84,#2ecc71)', t:'积分安检', tg:'反作弊', tgc:'g',
+   d:'积分 ≥ <b>25,000</b>：自动开放白名单权限。积分 ≥ <b>10,000,000</b>：判定为异常，四秒后直接清零。创造大陆的反作弊，简单粗暴但有效。',
+   code:`if (entity.coin >= 10000000) {
+  await sleep(4000)
+  entity.player.directMessages('[系统]您的积分异常，已清除')
+  entity.coin = 0
+}
+if (entity.coin >= 25000) {
+  await sleep(4000)
+  directMessage('[系统]你的积分已经达到25000，已自动开放白名单权限。')
+  WHITE_LIST.push({ name, userId })
+}`},
+
+  {c:'linear-gradient(135deg,#4cc9f0,#3a86ff)', t:'最后的审判 · 你被封了吗', tg:'封禁', tgc:'b',
+   d:'最后一步是查封禁。还在期内：画面变灰阶、隐身、强制旁观，弹窗告诉你解封时间；已经到期：自动解封并全服宣布；若是被限制进入：直接踢出服务器，进入那个神秘页面（）。',
+   code:`if (entity.data.Data.baninfo.ban) {
+  if (!isDatePassed(dn.toISOString(), baninfo.to)) {
+    entity.player.spectator = true
+    entity.player.invisible = true
+    entity.player.colorLUT = 'lut/Greyscale.lut'
+    // 你已被封禁，将于 XXXX 解封
+  } else {
+    baninfo.ban = false
+    // 你已被解封。请遵守本地图规则。
+  }
+}
+if (entity.data.Data.baninfo.iskick) banKick(...)`},
+
+  {c:'linear-gradient(135deg,#ffd23f,#f0b429)', t:'计数 +1', tg:'最后一行', tgc:'y',
+   d:'最后，你的进入次数加一。<b>31 万次踏入</b>，就是这一行一次一次加出来的。',
+   code:`entity.data.Data.join++`}
+];
+
+/* ---------- 身份名额 ---------- */
+const ROLLS = [
+  {n:'23', t:'位管理员',   s:'Administrators', c:'y'},
+  {n:'5',  t:'位 VIP',     s:'Very Important Players', c:'g'},
+  {n:'5',  t:'位信任者',   s:'Trusted Players', c:'b'}
+];
+
+/* ---------- 称号获得者（取自源代码写死列表） ---------- */
+const TITLES = [
+  {nm:'建筑比赛冠军', ic:'🏆', code:'BuildMatch', c:'y', empty:false,
+   ids:['DangDangawa']},
+  {nm:'建筑大师', ic:'🏛', code:'BuildGod', c:'g',
+   ids:['fCYHzZjVgzfQ9Mb','YukkeiNgai','DangDangawa']},
+  {nm:'UP 主', ic:'📺', code:'UPzhu', c:'b',
+   ids:['daimeng666','code489460x','xiaolan20110526','dsQr056v4nKx0hh','code37568z1','code93787a9','ikunjntm1']},
+  {nm:'工具人', ic:'🔧', code:'ToolPlayer', c:'y',
+   ids:['13737765','12924320','xiaolan20110526','rF9SFocJppWdt2U','dsQr056v4nKx0hh','YukkeiNgai','u816QvqyH380mus','123456789zjl','code24660kh','code489460x']},
+  {nm:'龙游之星', ic:'🌟', code:'LongYouStars', c:'g',
+   ids:['xiaolan20110526','DangDangawa','KpC01n1cepYoiAW']},
+  {nm:'好家伙', ic:'😮', code:'GoodPlayer', c:'b', empty:true, ids:[]},
+  {nm:'哲学家', ic:'💭', code:'ZheXue', c:'y',
+   ids:['302442461848193','13691648','DangDangawa','woshisanbing','code34643wh','YukkeiNgai','u816QvqyH380mus']}
+];
+
+/* ---------- 2022 系统广播 ---------- */
+const MESSAGES = [
+  '创造大陆是墨小生创作，元七七联合出品的建筑沙盒类地图',
+  '感谢白小生,元七七的部分代码支持！',
+  '本地图已安装反游客系统，游客886~',
+  '良言一句三冬暖，恶语伤人六月寒。',
+  '做文明玩家，请不要拆图Thanks♪(･ω･)ﾉ',
+  '所有玩家禁止买卖建筑！否则将清零积分！',
+  '游戏里的你再强，也是假的，所以不要贪玩迷恋！',
+  '想建铁路怎么办？选择传送带方块吧，不同方向可以使用方块旋转哦',
+  '如果遇到拆房，请在‘更多-举报’中举报拆图玩家哦！',
+  '漂亮的建筑可能会入选精品建筑集哦！',
+  '墨小生会把有意义的评论留言哦，请多多关注！',
+  '创造大陆拥有破坏方块记录！请勿拆图！',
+  '想玩战斗模式？在‘更多’里开启吧！',
+  '创造大陆对拆房者零容忍，就算你是官方，你拆图也要封号！',
+  '我可以帮你，也可以ban你！',
+  '创造大陆包括岛三最全方块！',
+  '管理员和各位玩家禁止分区划郡和建造保护区！',
+  '特别感谢元七七同学对创造大陆的开发和管理工作的大力支持!',
+  '真的有人会看我的提示么？',
+  '创造大陆的所有土地均为共享，禁止出售',
+  '不知道是什么方块？试试开启“菜单/设置/方块检索”吧！',
+  '你读了游玩须知吗？'
+];
+
+/* ---------- 进服流程 ---------- */
+function codeHtml(src){
+  return src.split('\n').map(l=>{
+    const e = esc(l);
+    return l.trim().startsWith('//') ? '<span class="cm">'+e+'</span>' : e;
+  }).join('\n');
+}
+function renderJoinFlow(){
+  const box = $('#jflow'); if(!box) return;
+  box.innerHTML = JOIN_STEPS.map((s,i)=>{
+    let extra = '';
+    if(s.say){
+      extra += '<div class="saylist">'+s.say.map(x=>
+        '<div class="sayline"><span class="who3">'+esc(x[0])+'</span>'+
+        '<span class="txt">'+x[1]+'</span></div>').join('')+'</div>';
+    }
+    if(s.chips){
+      extra += '<div class="chips2">'+s.chips.map(c=>'<span>'+esc(c)+'</span>').join('')+'</div>';
+    }
+    if(s.note){
+      extra += '<p style="margin-top:12px">'+s.note+'</p>';
+    }
+    if(s.code){
+      extra += '<pre>'+codeHtml(s.code)+'</pre>';
+    }
+    return '<div class="jstep reveal" style="--sc:'+s.c+'">'+
+      '<div class="stp">'+(i+1)+'</div><div class="bd">'+
+      '<h5>'+esc(s.t)+'<span class="tgx '+s.tgc+'">'+esc(s.tg)+'</span></h5>'+
+      '<p>'+s.d+'</p>'+extra+
+      '</div></div>';
+  }).join('');
+}
+
+/* ---------- 荣誉册 ---------- */
+function renderRolls(){
+  $('#rolls').innerHTML = ROLLS.map(r=>
+    '<div class="roll reveal"><div class="n '+r.c+'">'+esc(r.n)+'</div>'+
+    '<div class="tx"><div class="t">'+esc(r.t)+'</div><div class="s">'+esc(r.s)+'</div></div></div>').join('');
+}
+function renderTitles(){
+  $('#titles').innerHTML = TITLES.map(t=>{
+    const ids = t.empty
+      ? '<span>至今空缺 · 这个称号从来没有人拿到过</span>'
+      : t.ids.map(i=>'<span>'+esc(i)+'</span>').join('');
+    return '<div class="tcard '+t.c+(t.empty?' empty':'')+' reveal">'+
+      '<div class="th"><span class="icn">'+t.ic+'</span><span class="nm">'+esc(t.nm)+'</span>'+
+      '<span class="cnt">'+(t.empty?'空缺':t.ids.length+' 人')+'</span></div>'+
+      '<div class="tcode">globalThis.<b>'+esc(t.code)+'</b></div>'+
+      '<div class="ids">'+ids+'</div></div>';
+  }).join('');
+}
+
+/* ---------- 2022 系统广播 ---------- */
+let bIdx = 0, bTimer = null;
+function bcShow(i){
+  bIdx = (i + MESSAGES.length) % MESSAGES.length;
+  const el = $('#bcastLine');
+  el.innerHTML = '<span class="sys">[系统]</span>' + esc(MESSAGES[bIdx]);
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+  $('#bcIdx').textContent = (bIdx+1) + ' / ' + MESSAGES.length;
+}
+function bcAuto(){
+  clearInterval(bTimer);
+  bTimer = setInterval(()=>bcShow(bIdx+1), 4200);
+}
+function renderBroadcast(){
+  $('#bcAllList').innerHTML = MESSAGES.map(m=>'<li><b>[系统]</b>'+esc(m)+'</li>').join('');
+  bcShow(0);
+  const stop = ()=>clearInterval(bTimer);
+  $('#bcPrev').addEventListener('click',()=>{ stop(); bcShow(bIdx-1); bcAuto(); });
+  $('#bcNext').addEventListener('click',()=>{ stop(); bcShow(bIdx+1); bcAuto(); });
+  $('#bcAll').addEventListener('click',()=>{
+    const box = $('#bcAllBox'), open = box.classList.toggle('open');
+    $('#bcAll').textContent = open ? '收起全部' : '展开全部 22 条';
+    if(open) box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  document.addEventListener('visibilitychange',()=>{ document.hidden ? stop() : bcAuto(); });
+  bcAuto();
+}
+
+/* ---------- 社区记忆点 ---------- */
+const MEMCHIPS = ['小黑屋','监狱','喵贝壳打赏','"金主"称号','"小游戏"改名"切换地图"','《地图与玩家的约定》','拆房调查工具','精品建筑展区','临时黑名单','棋盘方块','"你配吗？"（v5.0.1 移除）','v7.0 大赦','物理球 20 秒','原点光柱','2b2t 分图','福利中心'];
+
+/* ---------- Bug 博物馆 ---------- */
+const BUGS = [
+  // 一、身份与权限乌龙馆
+  {h:'身份与权限乌龙馆', v:'v1.4', t:'行政大裁员', d:'"因为特殊原因，撤除所有管理员职位，现在管理员只有陌离殇、C酱两人，VIP保留。"',
+   j:'全场管理员一键清零，只剩两位"摄政王"顶着服务器走。', vic:'全体管理员', diff:4},
+  {h:'身份与权限乌龙馆', v:'v8.2', t:'全民管理员一日游', d:'修复：所有游客都是管理员的 Bug；修复：所有游客都是 VIP 的 Bug。',
+   j:'进服即老板。大家最讨厌的guestXXX当上VIP了（）。', vic:'全服玩家', diff:5},
+  {h:'身份与权限乌龙馆', v:'v8.2.1', t:'管理员互砍事件', d:'修复：管理员可以封禁管理员；修复：普通管理员可以使用高级指令。',
+   j:'内部互砍、越权施法。配套的"VIP 无法使用传送"则从反面说明：VIP 也曾被锁过（）。', vic:'管理团队', diff:4},
+  {h:'身份与权限乌龙馆', v:'v8.2.1', t:'在线判定失灵', d:'修复：地图档案保存的在线玩家检测。',
+   j:'把离线的当成在线、在线的当成离线，存档与封禁一起跟着错。', vic:'存档玩家', diff:3},
+  {h:'身份与权限乌龙馆', v:'v2.5', t:'禁言管理员漏洞', d:'CMD 新增禁言命令，且不能禁言管理员。',
+   j:'加了"不能禁言管理员"这条，说明之前是真的能禁言管理员（）。', vic:'管理员群体', diff:2},
+  {h:'身份与权限乌龙馆', v:'beta 0.8', t:'撞名式封禁', d:'早期"进监狱 + 空格 + 姓名"的纯字符串指令。',
+   j:'同名即同罪。换了三个昵称的Cen是屑（', vic:'同名玩家', diff:3},
+
+  // 二、经济与数值印钞机馆
+  {h:'经济与数值印钞机馆', v:'v8.2.1', t:'NaN 神话', d:'修复：打赏喵贝壳可兑换数量显示为 NaN。',
+   j:'兑换页直接变"非数字"。礼貌喵贝壳：你吗？', vic:'全体打赏者', diff:3},
+  {h:'经济与数值印钞机馆', v:'v8.2.2', t:'创造大陆银行破产预警', d:'修复：转账时自己会增加转账金额。',
+   j:'这个Bug存在了2年左右，还好没多少人发现。发现的都被封了（大嘘）', vic:'全体经济系统', diff:5},
+  {h:'经济与数值印钞机馆', v:'v8.2.1', t:'自转自刷', d:'修复：可以给自己转账的 Bug。',
+   j:'自己给自己转账，转了个寂寞。', vic:'全体玩家', diff:4},
+  {h:'经济与数值印钞机馆', v:'v6.0', t:'积分系统瘫痪事件', d:'"有合作者恶意修改代码，导致积分系统瘫痪"；v6.0 修复 >5000 分玩家，v6.1 完全恢复。',
+   j:'这不是普通的 Bug，是一次人为的安全事故。展柜标签写着：信任很贵。', vic:'全服玩家', diff:5},
+  {h:'经济与数值印钞机馆', v:'v8.1', t:'积分 / 烟花 / 物理球无法保存', d:'修复：积分、烟花、物理球无法保存。',
+   j:'存不住的财富和存不住的浪漫，一起被修好了（）。', vic:'全服玩家', diff:4},
+
+  // 三、误封与风控误伤馆
+  {h:'误封与风控误伤馆', v:'v5.3', t:'安全系统集体误伤', d:'修复：创造大陆安全系统误封的 Bug。',
+   j:'安全算法一紧张，老玩家集体躺枪。', vic:'被误封玩家', diff:4},
+  {h:'误封与风控误伤馆', v:'v8.2.6', t:'误封纪念馆', d:'"修改：撤销一位管理员的权限／加入三位新管理员；在此对遭到误封的玩家致歉！"',
+   j:'对不起！Sorry！すみません！', vic:'遭到误封的玩家', diff:5},
+  {h:'误封与风控误伤馆', v:'v5.6 / v5.7', t:'误检测两连修', d:'v5.6 修复误检测；v5.7 修复误检测。',
+   j:'这个自动检测我本来觉得应该挺有用的，没想到弊大于利。', vic:'被误判玩家', diff:3},
+  {h:'误封与风控误伤馆', v:'v8.2.4', t:'离线封禁异常', d:'修复：离线封禁的 Bug。',
+   j:'离线状态的封禁逻辑出错，可能漏封、错封，也可能上线后状态还错着。', vic:'离线玩家', diff:3},
+  {h:'误封与风控误伤馆', v:'v7.0', t:'历史存量太大，干脆大赦', d:'解除所有被封禁与拉黑的用户的处罚。',
+   j:'如果早知道没写好封禁系统的代码也会被...', vic:'全体被处罚者', diff:4},
+
+  // 四、建造 / 模型 / 方块显示馆
+  {h:'建造/模型/方块显示馆', v:'v8.2.10', t:'调色盘串色', d:'修复：展示方块时会显示展示过的液体作为背景色；液体颜色显示错误。',
+   j:'创陆特有的颜色傻傻分不清（', vic:'展示台观众', diff:3},
+  {h:'建造/模型/方块显示馆', v:'v8.2.10', t:'拆了像没拆', d:'修复：拆图恢复时可能存在残留方块的 Bug。',
+   j:'恢复不干净，房子拆了半截还立在那儿，这很诡异你知道吗（', vic:'被拆房玩家', diff:4},
+  {h:'建造/模型/方块显示馆', v:'v8.2.3', t:'开发者的社死瞬间', d:'移除：OBB 碰撞；修复：测试代码被执行。',
+   j:'懂这种窒息感吗（）。', vic:'全服玩家', diff:5},
+  {h:'建造/模型/方块显示馆', v:'v8.2.1', t:'全图远程偷家', d:'修复：放置与摧毁模型无距离限制的 Bug。',
+   j:'创造大陆秒变恶搞之家（', vic:'全服玩家', diff:4},
+  {h:'建造/模型/方块显示馆', v:'v8.2', t:'原点光柱闹情绪', d:'修复：原点光柱模型显示的 Bug（v8.2 与 v8.2.1 两次修复）。',
+   j:'你知道发出光柱的那个模型长什么样吗？', vic:'全服玩家', diff:3},
+  {h:'建造/模型/方块显示馆', v:'v8.1', t:'大版本功能回退集中爆发', d:'修复：地面无法保存建筑、PVP 不显示铁剑、无法恢复出生点、无法优化地图……',
+   j:'迁移到Pro的时候没改好代码导致的', vic:'全服玩家', diff:5},
+  {h:'建造/模型/方块显示馆', v:'v1.1 / v2.0 / v2.4', t:'方块放不出来 & 门开错方向', d:'v1.1 岩浆方块放不出；v2.0"风中草"放不出；v1.8/v2.4 门的方向错误。',
+   j:'十分甚至九分难绷', vic:'早期建筑师', diff:2},
+  {h:'建造/模型/方块显示馆', v:'v8.2.1', t:'undefined 之谜', d:'修复：读取建筑后调查显示 undefined。',
+   j:'null', vic:'undefined', diff:2},
+
+  // 五、数据与存档回档馆
+  {h:'数据与存档回档馆', v:'v8.2.1', t:'改名只在前端生效', d:'修复：玩家修改昵称后数据库不更新的 Bug。',
+   j:'前端变了，库里还是旧名字。封禁、排行榜、拆房记录全串。', vic:'改过名的玩家', diff:4},
+  {h:'数据与存档回档馆', v:'v8.2.1', t:'辛苦盖的房变成 0', d:'修复：玩家读取建筑数据为 0 的 Bug。',
+   j:'冰冷的建筑终于变成了温暖的数字（）', vic:'全体建筑师', diff:5},
+  {h:'数据与存档回档馆', v:'v3.4 / v3.5 / v3.7', t:'数据库迁移事故链', d:'v3.4 修复崩服；v3.5 修复读取建筑；v3.7 数据库升级中；v8.0 换 Storage 并支持导入旧版建筑。',
+   j:'你知道这玩意有多难调吗', vic:'全服玩家', diff:5},
+  {h:'数据与存档回档馆', v:'v4.4 / v4.5', t:'清空数据公告', d:'准备清空数据 → 清空数据公告。',
+   j:'你知道创造大陆清档过几次吗？', vic:'全服玩家', diff:4},
+
+  // 六、管理员工具与拆房调查馆
+  {h:'管理员工具与拆房调查馆', v:'v8.2.10', t:'审计链路被污染', d:'区域清图清除方块操作记录；拆图恢复新增区域恢复；修复残留方块。',
+   j:'清图把记录也清了，等于把案发现场擦干净了（）。', vic:'调查中的管理员', diff:4},
+  {h:'管理员工具与拆房调查馆', v:'v1.6 / v1.7', t:'左键放置、右键拆除', d:'拆图调查：左键看放置、右键看拆除，输入昵称恢复。',
+   j:'如果昵称重复、或改名没入库（见 v8.2.1），恢复就有可能恢复错人。', vic:'被调查玩家', diff:3},
+  {h:'管理员工具与拆房调查馆', v:'v2.7 / v8.2', t:'反向拆房恢复', d:'CMD 反向拆房恢复 Bug；v8.2 再次修复反向恢复。',
+   j:'恢复功能"反向"执行一次，等于把房子又拆了一遍。', vic:'被误操作的玩家', diff:4},
+  {h:'管理员工具与拆房调查馆', v:'v8.2.8', t:'快速封禁的代价', d:'新增快速封禁；同期 v8.2.1 修复管理员越权。',
+   j:'工具一旦权限错配，效率越高，误伤越快。', vic:'全服玩家', diff:4},
+
+  // 七、PVP / 战斗 / 物理馆
+  {h:'PVP/战斗/物理馆', v:'v8.2.1', t:'战场变工地', d:'修复：PVP 时可以刷墙。',
+   j:'不讲武德的时候到了。', vic:'PVP 玩家', diff:4},
+  {h:'PVP/战斗/物理馆', v:'v8.2', t:'巡查被穿透', d:'修复：巡查时 PVP 作弊的 Bug（v8.2、v8.2.1 两次）。',
+   j:'管理员开着巡查进来，照样被人作弊打穿。', vic:'巡查中的管理员', diff:4},
+  {h:'PVP/战斗/物理馆', v:'v2.3 / v4.8', t:'战斗与建造的边界', d:'v2.3 起"开启战斗模式时不可建造和破坏方块"；v4.8 修复 PVP 可建 / 破方块。',
+   j:'薛定谔的PVP（', vic:'PVP 玩家', diff:3},
+  {h:'PVP/战斗/物理馆', v:'v6.2 / v8.1', t:'物理球：短暂而绚烂', d:'物理球寿命 20 秒；v6.2 修物理球 Bug；v8.1 修物理球无法保存。',
+   j:'每个球只活 20 秒，还时不时存不住——像极了青春（）。', vic:'物理球爱好者', diff:3},
+
+  // 八、菜单 / UI / 私聊 / 小功能馆
+  {h:'菜单/UI/私聊馆', v:'v8.2.14', t:'"无法无法"使用', d:'修复：私聊无法无法使用的问题。',
+   j:'到底是能使用呢还是不能？我现在也没看懂（）', vic:'全体聊天玩家', diff:2},
+  {h:'菜单/UI/私聊馆', v:'v5.2', t:'排行榜打崩服', d:'修复：打开排行榜导致服务器崩溃。',
+   j:'此bug被多个团伙利用来崩图，原因是这个东西每次都会遍历一遍数据库里的数据', vic:'全服玩家', diff:5},
+  {h:'菜单/UI/私聊馆', v:'v1.9', t:'背景音乐爆音', d:'v1.5 加入 BGM（C418）；v1.9 修复背景音乐爆音。',
+   j:'耳机党爆炸（', vic:'全服玩家', diff:2},
+  {h:'菜单/UI/私聊馆', v:'v2.1 / beta 0.2', t:'祖传打不开的菜单', d:'beta 0.2 修复菜单打不开；v2.1 菜单打不开（再修）。',
+   j:'你知道在创造大陆里有几种方法可以打开菜单？', vic:'全服玩家', diff:3},
+
+  // 九、封禁系统 / 监狱 / 小黑屋馆
+  {h:'封禁/监狱/小黑屋馆', v:'v2.4 / v2.7 / v2.8', t:'红人还能操作', d:'v2.4 BAN 后禁言且不能破坏方块；v2.7 小黑屋；v2.8 进入监狱变红发光。',
+   j:'如果 ban 状态没同步，就会出现一个还在盖房的"红人"（）。', vic:'被封禁玩家', diff:4},
+  {h:'封禁/监狱/小黑屋馆', v:'v7.0 / v7.1', t:'惩罚系统重构期', d:'v7.0 解除所有封禁与拉黑；v7.1 重新加入 ID 封禁 / 拉黑 / 禁言。',
+   j:'先大赦再重建，规则来回横跳的那段时间最容易误伤。', vic:'全服玩家', diff:4},
+  {h:'封禁/监狱/小黑屋馆', v:'v6.2', t:'刷分与误封并存', d:'刷分封禁、封禁了某人、解封部分玩家。',
+   j:'配合 v6.0 的积分瘫痪：那阵子刷分和误封是同时发生的。', vic:'被封 / 被解封玩家', diff:4}
+];
+/* ---------- 寄语 ---------- */
+const DEV_VOICES = [
+  {n:'Cen', r:'开发者 · 编程 / 开发 / 运营', c:'linear-gradient(135deg,#ffd23f,#f0b429)', av:'C',
+   p:[
+    '当时开始搞这个图的时候我才五年级，现在已经高二了（）',
+    '五年以来，我在这里学到了很多，认识了很多人',
+    '我要感谢大家的支持，感谢协助运营与开发的人，感谢每一个收藏，与善良的热情的评论。',
+    '服务器关了，但创造大陆不会结束。这个图若能留在你们的回忆里，那就值得了。'
+   ],
+   sign:'— Cen（原味毛豆 / 墨小生）'},
+  {n:'七式草莓', r:'开发者 · 编程 / 开发 / 运营', c:'linear-gradient(135deg,#3ddc84,#4cc9f0)', av:'7',
+   p:[
+    '（我还没找草莓写）',
+   ],
+   sign:'— 七式草莓'}
+];
+
+const ADMIN_VOICES = [
+  {n:'河小林', r:'管理员代表 · 创陆VIP', c:'linear-gradient(135deg,#4cc9f0,#3a86ff)', av:'河',
+   p:[
+    '创陆是我结识了许多朋友的地方，在这里，我们一起建造，一起办活动，一切历历在目。如今神岛之旅已到终点，我们下一站再会！',
+   ],
+   sign:'— 河小林'},
+  {n:'XGY长老.幻影游船-幻梦之鹰', r:'管理员代表 · 三年陆民', c:'linear-gradient(135deg,#3ddc84,#2ecc71)', av:'X',
+   p:[
+    '在一次偶然间，我在神岛看到了创造大陆，好奇的驱使下我点开了它，也开始了我长达 3 年的陆民生活。这个地图让我在生活的压力中感受到了放松，柔和的轻音乐以及一栋栋精美的建筑让我沉醉其中。',
+    '我也在这里认识到了一些好朋友，他们与我一起建造各种建筑，一起的合作生活让我在压力紧绷的现实生活中感受到了慰藉。',
+    '在这里我也认识到了地图的创作者小生。在这个地图里拆房派与管理员总是势不两立，我也经历过被拆房的愤怒，也看到了许许多多管理员前辈秉公执法——而小生始终愿意给拆房者第二次机会，他总是教导管理员从轻处理。后来我也成为了一名管理员，与许多同事成为了朋友，与陆民们一起建造各种建筑。',
+    '而如今神岛已经关服，创造大陆在我的心底留下了许许多多美好的回忆。也感谢各位岛民始终愿意在创造大陆中游玩——无论神岛是否关服，创造大陆永远不散！'
+   ],
+   sign:'— XGY长老.幻影游船-幻梦之鹰'}
+];
+
+/* ---------- 玩家代表寄语 ---------- */
+const PLAYER_VOICES = [
+  {n:'霖赟', r:'玩家代表', c:'linear-gradient(135deg,#ffd23f,#ff8c42)', av:'霖',
+   p:[
+    '没记错的话，还有之前的新年发红包，在创造大陆里建跑酷，写字，画ch，玩私信，还有神秘小彩蛋群玉阁，一直往上飞，直接传送过去，还有创陆周年庆的蛋糕，并且还有优秀建筑集，我好怀念啊，希望小生可以看到我发的评论qwq',
+    '我很想念大家，很想念和你们一起玩的时光.......小生今年应该也是在上高一吧，体谅你的辛苦.....非常感谢大家在一起玩，我真的很开心，你六年级就开始玩你的地图，之前经常上线，这是我的小号哈哈（）',
+    '我看到了创陆崛起的过程，当时超过100k的时候，小生超级高兴。创陆封面的树我是亲眼看着你们建起来的，还有之前的合影.....也是挺有遗憾的了，从来没合过一张影的....' ,
+    '七七，铛铛，小爆哥，5242，墨小生，楠神，蜜桃芝元气，暴龙，花喵树木花灵，琳暗，九霄，ck工作室，还有啥来着......还有柯基，我的眼睛失去了听觉，蝶，梦境_晚霞，一只不会写字的企鹅，名探酱，仙辞睡不醒，yukkei，我相信作者应该对这些名字很熟悉了，都是我们的回忆.....如果没记错的话'
+  ],
+   reply:'我特别感谢你的支持！已经过去快 5 年了。'},
+  {n:'元气的大仙鹤n0', r:'玩家代表', c:'linear-gradient(135deg,#4cc9f0,#c084fc)', av:'元',
+   p:['走过两端，走进创陆，创造与毁灭同存，走向大佬，成为神明，成就神仙，终成创陆传说——致创造大陆'],
+   reply:'谢谢你的支持'},
+  {n:'魈厨和散厨-入机', r:'玩家代表，也是管理员', c:'linear-gradient(135deg,#3ddc84,#4cc9f0)', av:'魈',
+   p:['完结撒花，感谢陪伴！'],
+   reply:'有种看番到第12集的空虚感（）'},
+  {n:'胖猫弟弟瘦狗', r:'玩家代表', c:'linear-gradient(135deg,#ff8c42,#c084fc)', av:'胖',
+   p:['运营这么久说关就关，空悲切。'],
+   reply:'😔...'},
+   {n:'新不文明der岛民', r:'玩家代表', c:'linear-gradient(135deg,#ff8c42,#c084fc)', av:'新',
+   p:['哈哈哈关游玩之前摇了一大群人来（）创陆直接30人（）算我回馈这里了，2021年我就来了，在这修过铁路，墨小生之前还挺喜欢的，2024年又来这喵喵了（）刚刚，又举行了大合影（）'],
+   reply:'哈哈真算是回忆了，还有喵喵是什么？'},
+   {n:'GKT高贵火蜥蜴m617', r:'玩家代表', c:'linear-gradient(135deg,#ff8c42,#c084fc)', av:'G',
+   p:['晚安…我以前卡过bug的地方'],
+   reply:'晚安...我以前修过bug的地方'},
+   {n:'HIM_MC', r:'玩家代表', c:'linear-gradient(135deg,#ff8c42,#c084fc)', av:'H',
+   p:['再见所有人，THE END'],
+   reply:'再见'},
+   {n:'五月金毛不能发言', r:'玩家代表', c:'linear-gradient(135deg,#ff8c42,#c084fc)', av:'五',
+   p:['哦，孩子们，要进回忆了。再见。'],
+   reply:'就让这里进入回忆吧。'}
+];
+
+
+</script>
+
+<script>
+/* ============================================================
+   渲染 & 交互
+   ============================================================ */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = n => n.toLocaleString('en-US');
+const avatarColor = s => {
+  let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360;
+  return 'linear-gradient(135deg,hsl('+h+',75%,62%),hsl('+((h+48)%360)+',70%,52%))';
+};
+
+/* ---------- 全服数据卡片 ---------- */
+function renderStats(){
+  const dataBox = $('#dataGrid');
+  dataBox.innerHTML = STATS.map(s=>{
+    let val;
+    if(s.lock){
+      val = '<div class="locked">'+Array.from({length:s.lock}).map(()=>'<i>＊</i>').join('')+'</div>';
+    }else{
+      val = '<div class="vl">'+esc(s.vl)+'</div>';
+    }
+    const unTxt = s.unHtml || esc(s.un || '');
+    return '<div class="dcard reveal" style="--c:'+s.c+'">'+
+      (s.note?'<span class="note'+(s.note==='估算'?' est':'')+'">'+esc(s.note)+'</span>':'')+
+      '<div class="lb">'+esc(s.lb)+'</div>'+
+      '<div class="vslot">'+val+'</div>'+
+      '<div class="un">'+unTxt+'</div></div>';
+  }).join('');
+
+  $('#hardGrid').innerHTML = HARD.map(s=>
+    '<div class="dcard reveal" style="--c:'+s.c+'"><div class="lb">'+esc(s.lb)+'</div>'+
+    '<div class="vslot"><div class="vl" style="font-size:clamp(20px,2.8vw,28px)">'+esc(s.vl)+'</div></div>'+
+    '<div class="un">'+esc(s.un)+'</div></div>').join('');
+}
+
+/* ---------- 排行榜 ---------- */
+let curBoard = 0;
+function renderTabs(){
+  $('#tabs').innerHTML = BOARDS.map((b,i)=>
+    '<button class="tab'+(i===0?' on':'')+'" data-i="'+i+'">'+b.icon+' '+esc(b.name)+'</button>').join('');
+  $$('#tabs .tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      curBoard = +t.dataset.i;
+      $$('#tabs .tab').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');
+      renderRows();
+    });
+  });
+}
+function renderRows(){
+  const b = BOARDS[curBoard];
+  $('#bTitle').innerHTML = b.icon+' '+esc(b.name);
+  $('#bUnit').textContent = '单位：'+b.unit;
+  $('#bPending').hidden = BOARDS_READY;
+
+  if(!BOARDS_READY){
+    /* 统计中：只显示虚位，不显示任何模拟数据 */
+    $('#rows').innerHTML = Array.from({length:10}).map((_,i)=>
+      '<div class="row ph2"><div class="rk">'+(i+1)+'</div>'+
+      '<div class="nm"><span class="skel a"></span><span class="skel n"></span>'+
+      '<span class="skel t"></span></div>'+
+      '<div class="wait"><i>＊</i><i>＊</i><i>＊</i></div></div>').join('');
+    $('#bFoot').textContent = '※ 本榜暂无展示数据：服务器已停运，全服统计仍在进行中。数据整理完成后将在此处公布完整榜单。';
+    return;
+  }
+
+  $('#rows').innerHTML = b.rows.map((r,i)=>
+    '<div class="row"><div class="rk">'+(i+1)+'</div>'+
+    '<div class="nm"><span class="who" style="background:'+avatarColor(r[0])+'">'+esc(r[0][0])+'</span>'+
+    esc(r[0])+'<span class="tag">'+esc(r[2])+'</span></div>'+
+    '<div class="vl2">'+num(r[1])+'<small>'+esc(b.unit)+'</small></div></div>').join('');
+  $('#bFoot').textContent = '※ 榜单数据取自服务器停运前的统计快照；完整版名单将在数据整理完成后公布。此处仅展示前 10 名。';
+}
+
+/* ---------- 版本总览一句话 ---------- */
+function renderVersionSummary(){
+  const el = $('#vSum'); if(!el) return;
+  el.innerHTML =
+    '《创造大陆》从 <b>code v1 的一块木板</b>起步，历经 '+
+    '<b class="c1">12 个原型版本</b>、<b class="c2">11 个 beta 预发布</b>、'+
+    '<b class="c3">68 个正式编号</b>（含 v8.2 主线与 v8.2.1–v8.2.15 共 15 次收尾补丁），'+
+    '全日志去重共 <b>91 个独立版本</b>、约 <b>92 条更新记录</b>，'+
+    '终于在 <b class="end">v8.2.15 停服公告</b>处落幕。';
+}
+
+/* ---------- 时间轴 ---------- */
+function renderTimeline(){
+  $('#timeline').innerHTML = TIMELINE.map(t=>
+    '<div class="tl-item reveal"><span class="dot"></span><div class="tl-box">'+
+    '<div class="tl-ver">'+esc(t.ver)+'</div><h4>'+esc(t.name)+'</h4><p>'+esc(t.desc)+'</p>'+
+    '<div class="tl-anchors">'+t.anchors.map(a=>'<span>'+esc(a)+'</span>').join('')+'</div>'+
+    '</div></div>').join('');
+}
+
+/* ---------- 第一次清单 ---------- */
+function renderFirsts(){
+  $('#firsts').innerHTML = FIRSTS.map(f=>
+    '<div class="fcard reveal"><div class="fv">'+esc(f[0])+'</div><h5>'+esc(f[1])+'</h5><p>'+esc(f[2])+'</p></div>').join('');
+}
+
+/* ---------- 原话 ---------- */
+function renderQuotes(){
+  $('#quotes').innerHTML = QUOTES.map(q=>
+    '<div class="qcard reveal"><p>'+esc(q[0])+'</p><div class="src">'+esc(q[1])+'</div></div>').join('');
+}
+
+/* ---------- 叙事主线 ---------- */
+function renderLines(){
+  $('#lines').innerHTML = LINES.map(l=>
+    '<div class="lcard reveal" style="--c:'+l.c+'"><h4><span>'+l.icon+'</span>'+esc(l.name)+'</h4>'+
+    '<p>'+esc(l.desc)+'</p><div class="chain">'+esc(l.chain)+'</div></div>').join('');
+}
+
+/* ---------- 名人堂 ---------- */
+function renderHall(){
+  $('#hall').innerHTML = HALL.map(h=>
+    '<div class="hall reveal"><h4><span>'+h.icon+'</span>'+esc(h.title)+'</h4>'+
+    '<div class="hsub">'+esc(h.sub)+'</div><ul>'+
+    h.list.map(m=>'<li><span class="av" style="background:'+avatarColor(m[0])+'">'+esc(m[0][0])+'</span>'+
+      '<span>'+esc(m[0])+'</span><span class="role">'+esc(m[2])+'</span></li>').join('')+
+    '</ul></div>').join('');
+  $('#memChips').innerHTML = MEMCHIPS.map(c=>'<span class="chip">'+esc(c)+'</span>').join('');
+}
+
+/* ---------- Bug 博物馆 ---------- */
+let bugFilter = '全部';
+function renderBugFilters(){
+  const halls = ['全部', ...Array.from(new Set(BUGS.map(b=>b.h)))];
+  $('#bugFilters').innerHTML = halls.map(h=>
+    '<button class="tab'+(h===bugFilter?' on':'')+'" data-h="'+esc(h)+'">'+esc(h)+'</button>').join('');
+  $$('#bugFilters .tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      bugFilter = t.dataset.h;
+      $$('#bugFilters .tab').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');
+      renderBugs();
+    });
+  });
+}
+function renderBugs(){
+  const list = bugFilter==='全部' ? BUGS : BUGS.filter(b=>b.h===bugFilter);
+  $('#bugs').innerHTML = list.map(b=>
+    '<div class="bug reveal"><span class="hall">'+esc(b.h)+'</span>'+
+    '<span class="ver">'+esc(b.v)+'</span>'+
+    '<h5>'+esc(b.t)+'</h5>'+
+    '<div class="desc">'+esc(b.d)+'</div>'+
+    '<div class="joke">'+esc(b.j)+'</div>'+
+    '<div class="meta"><span class="vic">受害者：<b>'+esc(b.vic)+'</b></span>'+
+    '<span class="diff">修复难度 <b>'+'★'.repeat(b.diff)+'</b><s>'+'★'.repeat(5-b.diff)+'</s></span></div>'+
+    '</div>').join('');
+  observe();
+}
+
+/* ---------- 寄语 ---------- */
+function renderVoices(){
+  const tpl = v =>
+    '<div class="vcard reveal"><div class="vhead">'+
+    '<div class="vav" style="background:'+v.c+'">'+esc(v.av)+'</div>'+
+    '<div><div class="n">'+esc(v.n)+'</div><div class="r">'+esc(v.r)+'</div></div>'+
+    '</div>'+
+    v.p.map(p=>'<p>'+esc(p)+'</p>').join('')+
+    (v.reply?'<div class="vreply"><span class="ra">C</span><span class="rt"><b>Cen 回复：</b>'+esc(v.reply)+'</span></div>':'')+
+    '<div class="sign">'+esc(v.sign || ('— '+v.n))+'</div></div>';
+  $('#devVoices').innerHTML   = DEV_VOICES.map(v=>tpl(v).replace('vcard reveal','vcard dev reveal')).join('');
+  $('#adminVoices').innerHTML = ADMIN_VOICES.map(v=>tpl(v).replace('vcard reveal','vcard admin reveal')).join('');
+  $('#playerVoices').innerHTML = PLAYER_VOICES.map(v=>tpl(v)).join('');
+}
+
+/* ---------- 个人数据查询 ---------- */
+function renderQuery(name){
+  const box = $('#qResult');
+  const key = (name||'').trim();
+  if(!key){
+    box.innerHTML = '<div class="qempty">☝ 输入昵称后点击查询，查看你在这片大陆留下的痕迹。</div>';
+    return;
+  }
+  const p = PLAYERS[key];
+  if(!p){
+    box.innerHTML = '<div class="qempty">未找到「'+esc(key)+'」的示例数据。<br>试试：原味毛豆 / 墨小生 / 陌离殇 / C酱 / 云端筑梦师 / 方块狂魔 / 摸鱼的猫</div>';
+    return;
+  }
+  box.innerHTML =
+    '<div class="qhead"><span class="vav" style="background:'+avatarColor(key)+'">'+esc(key[0])+'</span>'+
+    '<span class="n">'+esc(key)+'</span><span class="badge">'+esc(p.tag)+'</span></div>'+
+    '<div class="qstats">'+p.rows.map(r=>
+      '<div class="qstat"><div class="k">'+esc(r[0])+'</div>'+
+      '<div class="v">'+num(r[1])+'<span style="font-size:12px;color:var(--muted)"> '+esc(r[2])+'</span></div>'+
+      '<div class="r">全服第 '+r[3]+' 名</div></div>').join('')+'</div>'+
+    '<div class="qdemo" style="background:rgba(61,220,132,.07);border-color:rgba(61,220,132,.3);color:#a9d8bb">'+
+    '✅ 以上为<b style="color:var(--green)">示例数据</b>。正式接口接入后，此处将显示你的真实数据与完整全服排名。</div>';
+}
+function initQuery(){
+  $('#qBtn').addEventListener('click',()=>renderQuery($('#qInput').value));
+  $('#qInput').addEventListener('keydown',e=>{ if(e.key==='Enter') renderQuery($('#qInput').value); });
+  renderQuery('原味毛豆');
+  $('#qInput').value = '原味毛豆';
+}
+
+/* ---------- 漂浮方块 ---------- */
+function initFloaters(){
+  const box = $('#floaters');
+  const cols = ['#ffd23f','#3ddc84','#4cc9f0','#f0b429','#2ecc71'];
+  let html = '';
+  for(let i=0;i<18;i++){
+    const s = 8+Math.random()*14;
+    html += '<span class="fl" style="left:'+(Math.random()*100)+'%;width:'+s+'px;height:'+s+'px;'+
+      'background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*14).toFixed(2)+'s;'+
+      'animation-duration:'+(11+Math.random()*9).toFixed(1)+'s"></span>';
+  }
+  box.innerHTML = html;
+}
+
+/* ---------- 星空 ---------- */
+function initStars(){
+  const cv = $('#stars'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  let W,H,stars=[];
+  function size(){
+    W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight;
+    stars = Array.from({length:Math.min(180,Math.floor(W*H/6000))},()=>({
+      x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.4+.3,
+      a:Math.random(), sp:Math.random()*.012+.004
+    }));
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.a += s.sp;
+      const al = .35 + Math.abs(Math.sin(s.a))*.65;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283);
+      ctx.fillStyle = 'rgba(255,255,255,'+al.toFixed(3)+')';
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  size(); tick();
+  window.addEventListener('resize',size);
+}
+
+/* ---------- 滚动动效 / 导航 ---------- */
+let io;
+function observe(){
+  if(io) io.disconnect();
+  /* threshold 用 0 + 底部负 margin：元素只要露头就触发。
+     避免"超高容器永远达不到 12% 可见比例"而整块停在 opacity:0 */
+  io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:0,rootMargin:'0px 0px -8% 0px'});
+
+  const vh = window.innerHeight;
+  $$('.reveal').forEach(el=>{
+    /* 兜底：比视口还高的大容器直接显示，让内部小卡片各自播动画 */
+    if(el.getBoundingClientRect().height > vh * 1.1){ el.classList.add('in'); return; }
+    io.observe(el);
+  });
+}
+
+/* 兜底巡检：滚动停下后，任何已划入视口却仍隐藏的元素强制显示，杜绝空白 */
+let sTimer;
+function safetyReveal(){
+  clearTimeout(sTimer);
+  sTimer = setTimeout(()=>{
+    const vh = window.innerHeight;
+    $$('.reveal:not(.in)').forEach(el=>{
+      const r = el.getBoundingClientRect();
+      if(r.top < vh * 0.95 && r.bottom > -vh * 0.2) el.classList.add('in');
+    });
+  }, 240);
+}
+function initNav(){
+  const nav = $('#nav');
+  const secs = $$('section[id]');
+  const links = $$('#nav a');
+  window.addEventListener('scroll',()=>{
+    nav.classList.toggle('on', window.scrollY>60);
+    let cur='';
+    secs.forEach(s=>{ if(window.scrollY + 120 >= s.offsetTop) cur = s.id; });
+    links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+cur));
+    safetyReveal();
+  },{passive:true});
+  window.addEventListener('resize',()=>{ observe(); safetyReveal(); });
+  window.addEventListener('load',()=>{ observe(); safetyReveal(); });
+  window.dispatchEvent(new Event('scroll'));
+}
+
+/* ---------- 图片加载失败降级 ---------- */
+function initImgFallback(){
+  const mark = im => {
+    im.style.opacity = 0;
+    const par = im.closest('.ph, .cover');
+    if(par) par.classList.add('imgfail');
+  };
+  $$('img').forEach(im=>{
+    im.addEventListener('error',()=>mark(im));
+    if(im.complete && im.naturalWidth === 0) mark(im);
+  });
+}
+
+/* ---------- 右上角全屏 ---------- */
+function initFullscreen(){
+  const btn = $('#fsBtn'), tip = $('#fsTip');
+  if(!btn) return;
+  const d = document.documentElement;
+  const req  = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
+  const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+  if(!req){ btn.style.display = 'none'; return; }          /* iOS Safari 等不支持则隐藏 */
+
+  let timer;
+  const say = t => { tip.textContent = t; tip.classList.add('show'); clearTimeout(timer); timer = setTimeout(()=>tip.classList.remove('show'), 1800); };
+  const isFs = () => !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  const sync = () => {
+    const on = isFs();
+    btn.classList.toggle('on', on);
+    const label = on ? '退出全屏（Esc / F11）' : '全屏浏览';
+    btn.title = label; btn.setAttribute('aria-label', label);
+  };
+  btn.addEventListener('click', async ()=>{
+    try{
+      if(isFs()){ await exit.call(document); say('已退出全屏'); }
+      else { await req.call(d); say('已进入全屏 · 按 Esc 退出'); }
+    }catch(e){ say('当前浏览器不允许全屏，可试试 F11'); }
+  });
+  ['fullscreenchange','webkitfullscreenchange','msfullscreenchange'].forEach(ev=>document.addEventListener(ev, sync));
+  /* 双击页面空白处也可切换全屏（移动端更顺手） */
+  document.addEventListener('keydown', e=>{ if(e.key==='F11'){ e.preventDefault(); sync(); } });
+  sync();
+}
+
+/* ---------- 启动 ---------- */
+renderStats();
+renderTabs();
+renderRows();
+renderVersionSummary();
+renderTimeline();
+renderFirsts();
+renderQuotes();
+renderLines();
+renderHall();
+renderRolls();
+renderJoinFlow();
+renderTitles();
+renderBroadcast();
+renderBugFilters();
+renderBugs();
+renderVoices();
+initQuery();
+initFloaters();
+initStars();
+initImgFallback();
+initFullscreen();
+initNav();
+observe();
+</script>
+</body>
+</html>
